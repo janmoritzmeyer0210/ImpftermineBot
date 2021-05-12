@@ -20,7 +20,7 @@ def scrapePage():
     driver.quit()
 
     if(jsonData == "{}"):
-        pushData = {"token": os.environ['token'], "user": os.environ['user'], "title": "Der Bot wurde gesperrt :(", "priority": "1"}
+        pushData = {"token": os.environ['token'], "user": os.environ['user'], "message": "Der Bot wurde gesperrt :(", "priority": "1"}
         requests.post("https://api.pushover.net/1/messages.json", pushData)
 
     data = json.loads(jsonData)
