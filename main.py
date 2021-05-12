@@ -31,7 +31,7 @@ def scrapePage():
     print(available)
 
     if(available):
-        pushData = {"token":os.environ['token'],"user":os.environ['user'],"title":"Es gibt Impfterminee!!!", "message": types, "priority":"1"}
+        pushData = {"token":os.environ['token'],"user":os.environ['user'],"title":"Es gibt Impfterminee!!!", "message": json.dumps(types), "priority":"1"}
         requests.post("https://api.pushover.net/1/messages.json", pushData)
 
 while(True):
