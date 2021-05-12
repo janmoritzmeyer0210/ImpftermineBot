@@ -1,8 +1,4 @@
-import os
-
-from selenium import webdriver
-import time, json, requests
-
+import os, time, json, requests
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
@@ -17,7 +13,7 @@ def scrapePage():
     time.sleep(1)
     driver.find_element_by_css_selector("body > app-root > div > app-page-its-login > div > div > div:nth-child(2) > app-its-login-user > div > div > app-corona-vaccination > div:nth-child(2) > div > div > label:nth-child(2) > span > small").click()
     time.sleep(5)
-    jsonData = driver.get("https://353-iz.impfterminservice.de/rest/suche/termincheck?plz=20357&leistungsmerkmale=L920,L921,L922,L923")
+    driver.get("https://353-iz.impfterminservice.de/rest/suche/termincheck?plz=20357&leistungsmerkmale=L920,L921,L922,L923")
     jsonData = driver.find_element_by_css_selector("pre")
     jsonData = jsonData.text
 
