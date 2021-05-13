@@ -55,9 +55,9 @@ def scrapePage(locationData, remote):
             availableSlots = driver.find_element_by_css_selector("#itsSearchAppointmentsModal > div > div > div.modal-body > div > div > form > div.d-flex.flex-column.its-slot-pair-search-info > span").text
             pushData = {"token": os.environ['token'], "user": os.environ['user'], "title": "Es gibt Impftermine in " + locationData[0] + " !!!", "message": availableSlots, "priority": "1"}
             requests.post("https://api.pushover.net/1/messages.json", pushData)
-        else:
-            pushData = {"token": os.environ['token'], "user": os.environ['user'], "message": "Impftermine in " + locationData[0] + " mit Server "+remote+" geprüft, gibt aber keine :(", "priority": "-2"}
-            requests.post("https://api.pushover.net/1/messages.json", pushData)
+        # else:
+            # pushData = {"token": os.environ['token'], "user": os.environ['user'], "message": "Impftermine in " + locationData[0] + " mit Server "+remote+" geprüft, gibt aber keine :(", "priority": "-2"}
+            # requests.post("https://api.pushover.net/1/messages.json", pushData)
 
 
         driver.quit()
@@ -68,4 +68,4 @@ while(True):
     for server in servers:
         for location in locations:
             scrapePage(location, server)
-            time.sleep(15)
+            time.sleep(20)
