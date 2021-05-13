@@ -68,4 +68,4 @@ while(True):
     for server in servers:
         for location in locations:
             scrapePage(location, server)
-            time.sleep(25)
+            time.sleep(15)
