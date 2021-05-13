@@ -2,9 +2,11 @@ import os, time, json, requests
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
+# Send Test Message to show that the application is running
 pushData = {"token":os.environ['token'],"user":os.environ['user'],"title":"Die APP wurde neu gestartet","message":"Lol", "priority":"1"}
 request = requests.post("https://api.pushover.net/1/messages.json", pushData)
 
+# Locations
 locations = [["Hamburg Messehallen","https://353-iz.impfterminservice.de/impftermine/service?plz=20357", "https://353-iz.impfterminservice.de/rest/suche/termincheck?plz=20357&leistungsmerkmale=L920,L921,L922,L923"],["Tübingen Impfzentrum","https://003-iz.impfterminservice.de/impftermine/service?plz=72072", "https://003-iz.impfterminservice.de/rest/suche/termincheck?plz=72072&leistungsmerkmale=L920,L921,L922,L923"]]
 
 def scrapePage(data):
@@ -33,6 +35,10 @@ def scrapePage(data):
 
     if(available):
         pushData = {"token":os.environ['token'],"user":os.environ['user'],"title":"Es gibt Impftermine in "+data[0]+" !!!", "message": json.dumps(types), "priority":"1"}
+        requests.post("https://api.pushover.net/1/messages.json", pushData)
+    else:
+        pushData = {"token": os.environ['token'], "user": os.environ['user'],
+                    "title": "Impftermine in " + data[0] + " geprüft, gibt aber keine :(", "message": json.dumps(types), "priority": "-2"}
         requests.post("https://api.pushover.net/1/messages.json", pushData)
 
 while(True):

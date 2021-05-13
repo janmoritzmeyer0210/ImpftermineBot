@@ -1,6 +1,11 @@
 # ImpftermineBot
 
-This Python Bot crawls the impfterminservice.de page and searches for avaialable Slots
+This Python Bot crawls the impfterminservice.de page and searches for avaialable Slots in desired locations using Selenium. Notification service is based on the [PUSHOVER](https://pushover.net/) Service.
 
-# Install
-Install docker and docker-compose on your client/server, set the enviroment Variables PUSHOVER_TOKEN and PUSHOVER_USER and docker-compose up -d should do the rest
+## Setup Pushover
+Go to [Pushover](https://pushover.net/), create an account, an application and download the App to your device. After that set the following enviroment Variables for your User:
+- PUSHOVER_TOKEN (The Token for your Pushover Application) 
+- PUSHOVER_USER (The Token for your Pushover User)
+
+## Install
+After you've set the Enviroment Variables, install docker and docker-compose and docker-compose up -d should do the rest :)
