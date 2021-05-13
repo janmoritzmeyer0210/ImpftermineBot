@@ -5,7 +5,7 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 pushData = {"token":os.environ['token'],"user":os.environ['user'],"title":"Die APP wurde neu gestartet","message":"Lol", "priority":"1"}
 request = requests.post("https://api.pushover.net/1/messages.json", pushData)
 
-print(request.text)
+
 
 def scrapePage():
     driver = webdriver.Remote("http://selenium:4444/wd/hub", DesiredCapabilities.CHROME)
@@ -22,6 +22,7 @@ def scrapePage():
     if(jsonData == "{}"):
         pushData = {"token": os.environ['token'], "user": os.environ['user'], "message": "Der Bot wurde gesperrt :(", "priority": "1"}
         requests.post("https://api.pushover.net/1/messages.json", pushData)
+        time.sleep(600)
 
     data = json.loads(jsonData)
 
@@ -37,4 +38,4 @@ def scrapePage():
 while(True):
     time.sleep(10)
     scrapePage()
-    time.sleep(300)
+    time.sleep(150)
