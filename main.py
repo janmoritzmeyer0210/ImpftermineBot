@@ -3,7 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 # Send Test Message to show that the application is running
-pushData = {"token":os.environ['token'],"user":os.environ['user'],"title":"Die APP wurde neu gestartet","message":"Lol", "priority":"1"}
+pushData = {"token":os.environ['token'],"user":os.environ['user'],"message":"Die APP wurde neu gestartet", "priority":"-2"}
 request = requests.post("https://api.pushover.net/1/messages.json", pushData)
 
 # Locations Array is defined in the following structure: Array[Array[Name, Vaccination Center Page, REST Api for appointment check]]
