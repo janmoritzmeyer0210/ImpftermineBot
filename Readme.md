@@ -9,3 +9,8 @@ Go to [Pushover](https://pushover.net/), create an account, an application and d
 
 ## Install
 After you've set the Enviroment Variables, install docker and docker-compose and docker-compose up -d should do the rest :)
+
+## Todos
+- Twitter Integration
+- Check which dates are available and include them in the notification
+- Reserve appointments
