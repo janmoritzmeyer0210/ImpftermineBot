@@ -23,10 +23,9 @@ def scrapePage(locationData, remote):
     jsonData = driver.find_element_by_css_selector("pre")
     jsonData = jsonData.text
 
-    driver.quit()
-
     # If the response is {} we probably got detected and our IP is blocked. Therefore we wait 10 minutes until we continue
     if(jsonData == "{}"):
+        driver.quit()
         pushData = {"token": os.environ['token'], "user": os.environ['user'], "message": "Der Bot "+remote+" wurde in "+locationData[0]+" gesperrt :(", "priority": "1"}
         requests.post("https://api.pushover.net/1/messages.json", pushData)
         time.sleep(30)
@@ -42,9 +41,26 @@ def scrapePage(locationData, remote):
         if(available):
             pushData = {"token":os.environ['token'],"user":os.environ['user'],"title":"Es gibt Impftermine in "+locationData[0]+" !!!", "message": json.dumps(types), "priority":"1"}
             requests.post("https://api.pushover.net/1/messages.json", pushData)
+            driver.get(locationData[1])
+            time.sleep(1)
+            driver.find_element_by_css_selector("body > app-root > div > app-page-its-login > div > div > div:nth-child(2) > app-its-login-user > div > div > app-corona-vaccination > div:nth-child(2) > div > div > label:nth-child(1) > span").click()
+            time.sleep(1)
+            driver.find_element_by_css_selector("body > app-root > div > app-page-its-login > div > div > div:nth-child(2) > app-its-login-user > div > div > app-corona-vaccination > div:nth-child(3) > div > div > div > div.ets-login-form-section.in > app-corona-vaccination-yes > form > div:nth-child(1) > label > app-ets-input-code > div > div:nth-child(1) > label > input").send_keys(os.environ['code1'])
+            driver.find_element_by_css_selector("body > app-root > div > app-page-its-login > div > div > div:nth-child(2) > app-its-login-user > div > div > app-corona-vaccination > div:nth-child(3) > div > div > div > div.ets-login-form-section.in > app-corona-vaccination-yes > form > div:nth-child(1) > label > app-ets-input-code > div > div:nth-child(3) > label > input").send_keys(os.environ['code2'])
+            driver.find_element_by_css_selector("body > app-root > div > app-page-its-login > div > div > div:nth-child(2) > app-its-login-user > div > div > app-corona-vaccination > div:nth-child(3) > div > div > div > div.ets-login-form-section.in > app-corona-vaccination-yes > form > div:nth-child(1) > label > app-ets-input-code > div > div:nth-child(5) > label > input").send_keys(os.environ['code3'])
+            driver.find_element_by_css_selector("body > app-root > div > app-page-its-login > div > div > div:nth-child(2) > app-its-login-user > div > div > app-corona-vaccination > div:nth-child(3) > div > div > div > div.ets-login-form-section.in > app-corona-vaccination-yes > form > div:nth-child(2) > button").click()
+            time.sleep(2)
+            driver.find_element_by_css_selector("body > app-root > div > app-page-its-search > div > div > div:nth-child(2) > div > div > div:nth-child(5) > div > div:nth-child(1) > div.its-search-step-body > div.its-search-step-content > button").click()
+            time.sleep(2)
+            availableSlots = driver.find_element_by_css_selector("#itsSearchAppointmentsModal > div > div > div.modal-body > div > div > form > div.d-flex.flex-column.its-slot-pair-search-info > span").text
+            pushData = {"token": os.environ['token'], "user": os.environ['user'], "title": "Es gibt Impftermine in " + locationData[0] + " !!!", "message": availableSlots, "priority": "1"}
+            requests.post("https://api.pushover.net/1/messages.json", pushData)
         else:
             pushData = {"token": os.environ['token'], "user": os.environ['user'], "message": "Impftermine in " + locationData[0] + " mit Server "+remote+" geprüft, gibt aber keine :(", "priority": "-2"}
             requests.post("https://api.pushover.net/1/messages.json", pushData)
+
+
+        driver.quit()
 
 while(True):
     # Wait until the selenium container initialized

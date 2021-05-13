@@ -9,3 +9,6 @@ services:
     environment:
       - token=${PUSHOVER_TOKEN}
       - user=${PUSHOVER_USER}
+      - code1=${CODE_1}
+      - code2=${CODE_2}
+      - code3=${CODE_3}
