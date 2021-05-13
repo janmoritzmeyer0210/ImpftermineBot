@@ -11,7 +11,7 @@ locations = [["Hamburg Messehallen","https://353-iz.impfterminservice.de/impfter
 
 def scrapePage(locationData):
     # Click through the impftermineservice page to act like a human lol
-    driver = webdriver.Remote("http://127.0.0.1:4444/wd/hub", DesiredCapabilities.CHROME)
+    driver = webdriver.Remote("http://selenium:4444/wd/hub", DesiredCapabilities.CHROME)
     driver.get(locationData[1])
     time.sleep(1)
     driver.find_element_by_css_selector("body > app-root > div > app-page-its-login > div > div > div:nth-child(2) > app-its-login-user > div > div > app-corona-vaccination > div:nth-child(2) > div > div > label:nth-child(2) > span > small").click()
