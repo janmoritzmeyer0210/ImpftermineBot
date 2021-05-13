@@ -25,7 +25,7 @@ def scrapePage(locationData):
 
     # If the response is {} we probably got detected and our IP is blocked. Therefore we wait 10 minutes until we continue
     if(jsonData == "{}"):
-        pushData = {"token": os.environ['token'], "user": os.environ['user'], "message": "Der Bot wurde gesperrt :(", "priority": "1"}
+        pushData = {"token": os.environ['token'], "user": os.environ['user'], "message": "Der Bot wurde in "+locationData[0]+" gesperrt :(", "priority": "1"}
         requests.post("https://api.pushover.net/1/messages.json", pushData)
         time.sleep(600)
 
@@ -49,4 +49,4 @@ while(True):
     time.sleep(10)
     for location in locations:
         scrapePage(location)
-    time.sleep(150)
+    time.sleep(200)
