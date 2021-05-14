@@ -57,10 +57,10 @@ def scrapePage(locationData, remote):
             requests.post("https://api.pushover.net/1/messages.json", pushData)
             # Wait to not enter same code more than one time per 10 minutes
             time.sleep(600)
+            driver.quit()
         else:
             print("Impftermine in " + locationData[0] + " mit Server "+remote+" geprüft, gibt aber keine :(")
-
-        driver.quit()
+            driver.quit()
 
 while(True):
     # Wait until the selenium container initialized
