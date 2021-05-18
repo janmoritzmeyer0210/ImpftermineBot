@@ -9,7 +9,7 @@ request = requests.post("https://api.pushover.net/1/messages.json", pushData)
 # Locations Array is defined in the following structure: Array[Array[Name, Vaccination Center Page, REST Api for appointment check]]
 # locations = [["Hamburg Messehallen","https://353-iz.impfterminservice.de/impftermine/service?plz=20357", "https://353-iz.impfterminservice.de/rest/suche/termincheck?plz=20357&leistungsmerkmale=L920,L921,L922,L923"],["Tübingen Impfzentrum","https://003-iz.impfterminservice.de/impftermine/service?plz=72072", "https://003-iz.impfterminservice.de/rest/suche/termincheck?plz=72072&leistungsmerkmale=L920,L921,L922,L923"]]
 locations = [["Hamburg Messehallen","https://353-iz.impfterminservice.de/impftermine/service?plz=20357", "https://353-iz.impfterminservice.de/rest/suche/termincheck?plz=20357&leistungsmerkmale=L920,L921,L922,L923"]]
-servers = ["http://selenium:4444/wd/hub","http://10.0.0.3:4444/wd/hub","http://10.0.0.4:4444/wd/hub","http://10.0.0.5:4444/wd/hub","http://10.0.0.6:4444/wd/hub"]
+servers = ["http://selenium:4444/wd/hub","http://10.0.0.3:4444/wd/hub","http://10.0.0.4:4444/wd/hub","http://10.0.0.5:4444/wd/hub","http://10.0.0.2:4444/wd/hub"]
 
 def scrapePage(locationData, remote):
     # Click through the impftermineservice page to act like a human lol
