@@ -28,7 +28,7 @@ def scrapePage(locationData, remote):
         driver.quit()
         pushData = {"token": os.environ['token'], "user": os.environ['user'], "message": "Der Bot "+remote+" wurde in "+locationData[0]+" gesperrt :(", "priority": "1"}
         requests.post("https://api.pushover.net/1/messages.json", pushData)
-        time.sleep(30)
+        time.sleep(300)
     else:
         # Decode json data
         data = json.loads(jsonData)
@@ -68,4 +68,4 @@ while(True):
     for server in servers:
         for location in locations:
             scrapePage(location, server)
-        time.sleep(25)
+        time.sleep(30)
