@@ -15,8 +15,20 @@ def scrapePage(locationData, remote):
     # Click through the impftermineservice page to act like a human lol
     driver = webdriver.Remote(remote, DesiredCapabilities.CHROME)
     driver.get(locationData[1])
-    time.sleep(1)
-    driver.find_element_by_css_selector("body > app-root > div > app-page-its-login > div > div > div:nth-child(2) > app-its-login-user > div > div > app-corona-vaccination > div:nth-child(2) > div > div > label:nth-child(2) > span > small").click()
+    try:
+        driver.find_element_by_css_selector(
+            "body > app-root > div > app-page-its-login > div > div > div:nth-child(2) > app-its-login-user > div > div > app-corona-vaccination > div:nth-child(2) > div > div > label:nth-child(2) > span > small").click()
+    except:
+        try:
+            while True:
+                driver.find_element_by_css_selector("div.clock")
+                print("Waiting room...")
+                time.sleep(2)
+        except:
+            print("We are through")
+            time.sleep(2)
+            driver.find_element_by_css_selector(
+                "body > app-root > div > app-page-its-login > div > div > div:nth-child(2) > app-its-login-user > div > div > app-corona-vaccination > div:nth-child(2) > div > div > label:nth-child(2) > span > small").click()
     time.sleep(5)
     driver.get(locationData[2])
     # Get Json Data which shows available appointments
