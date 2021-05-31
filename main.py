@@ -83,9 +83,12 @@ while(True):
     # Wait until the selenium container initialized
     time.sleep(10)
     if(int(time.strftime("%H")) > 21):
+        print("sleep")
         pushData = {"token": os.environ['token'], "user": os.environ['user'], "message": "Die APP geht schlafen", "priority": "-2"}
         request = requests.post("https://api.pushover.net/1/messages.json", pushData)
         time.sleep(25200)
+    print("nosleep")
+    print(int(time.strftime("%H")))
     for server in servers:
         for location in locations:
             scrapePage(location, server)
