@@ -95,4 +95,4 @@ while(True):
     for server in servers:
         for location in locations:
             scrapePage(location, server)
-        time.sleep(10)
+        time.sleep(60)
