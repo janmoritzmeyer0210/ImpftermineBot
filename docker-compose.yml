@@ -22,4 +22,4 @@ services:
     image: dperson/torproxy
     environment:
       - TOR_NewCircuitPeriod=30
-      - TOR_MaxCircuitDirtiness=240
+      - TOR_MaxCircuitDirtiness=120
