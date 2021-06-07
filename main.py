@@ -121,3 +121,4 @@ while(True):
         time.sleep(25200)
     for location in locations:
         scrapePage(location, os.environ['selenium'])
+        time.sleep(10)
