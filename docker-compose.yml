@@ -47,7 +47,7 @@ services:
     image: dperson/torproxy
     environment:
       - TOR_NewCircuitPeriod=30
-      - TOR_MaxCircuitDirtiness=240
+      - TOR_MaxCircuitDirtiness=600
   selenium-stu:
     restart: always
     image: selenium/standalone-chrome:4.0.0
@@ -71,4 +71,4 @@ services:
     image: dperson/torproxy
     environment:
       - TOR_NewCircuitPeriod=30
-      - TOR_MaxCircuitDirtiness=240
+      - TOR_MaxCircuitDirtiness=300
