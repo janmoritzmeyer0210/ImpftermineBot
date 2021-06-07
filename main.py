@@ -15,10 +15,13 @@ servers = ["http://selenium:4444/wd/hub"]
 def scrapePage(locationData, remote):
     # Click through the impftermineservice page to act like a human lol
     PROXY = "http://tor:8118"  # IP:PORT or HOST:PORT
-
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument('--proxy-server=%s' % PROXY)
     driver = webdriver.Remote(remote, DesiredCapabilities.CHROME, None, None, False, None, chrome_options)
+
+    driver.get("http://api.ipify.org/")
+    print(driver.page_source)
+
 
     driver.get(locationData[1])
     try:
