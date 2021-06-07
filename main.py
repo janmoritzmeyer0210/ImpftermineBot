@@ -11,7 +11,7 @@ pushData = {"chat_id":"-1001499214177","text":"Die APP wurde neu gestartet"}
 request = requests.post("https://api.telegram.org/bot"+os.environ['telegram']+"/sendMessage", pushData)
 
 # Locations Array is defined in the following structure: Array[Array[Name, Vaccination Center Page, REST Api for appointment check]]
-locations = json.parse(os.environ['locations'])
+locations = json.loads(os.environ['locations'])
 # locations = [["Hamburg Messehallen","https://353-iz.impfterminservice.de/impftermine/service?plz=20357", "https://353-iz.impfterminservice.de/rest/suche/termincheck?plz=20357&leistungsmerkmale=L920,L921,L922,L923"]]
 # servers = ["http://selenium:4444/wd/hub","http://10.0.0.3:4444/wd/hub","http://10.0.0.4:4444/wd/hub","http://10.0.0.5:4444/wd/hub","http://10.0.0.2:4444/wd/hub"]
 def scrapePage(locationData, remote):
