@@ -12,6 +12,7 @@ services:
       - tor
     environment:
       - token=${PUSHOVER_TOKEN}
+      - telegram=${TELEGRAM_TOKEN}
       - user=${PUSHOVER_USER}
       - code1=${CODE_1}
       - code2=${CODE_2}

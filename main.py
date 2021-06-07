@@ -7,8 +7,11 @@ from selenium.webdriver.common.proxy import Proxy, ProxyType
 pushData = {"token":os.environ['token'],"user":os.environ['user'],"message":"Die APP wurde neu gestartet", "priority":"-2"}
 request = requests.post("https://api.pushover.net/1/messages.json", pushData)
 
+pushData = {"chat_id":"-1001499214177","text":"Die APP wurde neu gestartet"}
+request = requests.post("https://api.telegram.org/bot"+os.environ['telegram']+"/sendMessage", pushData)
+
 # Locations Array is defined in the following structure: Array[Array[Name, Vaccination Center Page, REST Api for appointment check]]
-locations = [["Hamburg Messehallen","https://353-iz.impfterminservice.de/impftermine/service?plz=20357", "https://353-iz.impfterminservice.de/rest/suche/termincheck?plz=20357&leistungsmerkmale=L920,L921,L922,L923"],["Tübingen Impfzentrum","https://003-iz.impfterminservice.de/impftermine/service?plz=72072", "https://003-iz.impfterminservice.de/rest/suche/termincheck?plz=72072&leistungsmerkmale=L920,L921,L922,L923"]]
+locations = [["Hamburg Messehallen","https://353-iz.impfterminservice.de/impftermine/service?plz=20357", "https://353-iz.impfterminservice.de/rest/suche/termincheck?plz=20357&leistungsmerkmale=L920,L921,L922,L923", "@impfenhh"],["Tübingen Impfzentrum","https://003-iz.impfterminservice.de/impftermine/service?plz=72072", "https://003-iz.impfterminservice.de/rest/suche/termincheck?plz=72072&leistungsmerkmale=L920,L921,L922,L923", "@impfentue"]]
 # locations = [["Hamburg Messehallen","https://353-iz.impfterminservice.de/impftermine/service?plz=20357", "https://353-iz.impfterminservice.de/rest/suche/termincheck?plz=20357&leistungsmerkmale=L920,L921,L922,L923"]]
 # servers = ["http://selenium:4444/wd/hub","http://10.0.0.3:4444/wd/hub","http://10.0.0.4:4444/wd/hub","http://10.0.0.5:4444/wd/hub","http://10.0.0.2:4444/wd/hub"]
 servers = ["http://selenium:4444/wd/hub"]
@@ -33,6 +36,8 @@ def scrapePage(locationData, remote):
             while True:
                 driver.find_element_by_css_selector("div.clock")
                 print("Waiting room in "+locationData[0]+"...")
+                pushData = {"chat_id": "-1001499214177", "text": "Waiting room in "+locationData[0]+"..."}
+                requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
                 time.sleep(10)
         except:
             print("We are through")
@@ -50,6 +55,8 @@ def scrapePage(locationData, remote):
         driver.quit()
         pushData = {"token": os.environ['token'], "user": os.environ['user'], "message": "Der Bot wurde in "+locationData[0]+" mit der IP "+ip+" gesperrt :(", "priority": "1"}
         requests.post("https://api.pushover.net/1/messages.json", pushData)
+        pushData = {"chat_id": "-1001499214177", "text": "Der Bot wurde in "+locationData[0]+" mit der IP "+ip+" gesperrt :("}
+        requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
         time.sleep(30)
     else:
         # Decode json data
@@ -62,6 +69,8 @@ def scrapePage(locationData, remote):
         # If an appointment is available send an notification to your device, if not send a message without notification which is shown in the Pushover App
         if(available):
             try:
+                pushData = {"chat_id": locationData[2], "text": "Es gibt Impftermine in "+locationData[0]+" !!! " + json.dumps(types)}
+                requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
                 pushData = {"token":os.environ['token'],"user":os.environ['user'],"title":"Es gibt Impftermine in "+locationData[0]+" !!!", "message": json.dumps(types), "priority":"1"}
                 requests.post("https://api.pushover.net/1/messages.json", pushData)
                 driver.get(locationData[1])
@@ -84,9 +93,13 @@ def scrapePage(locationData, remote):
             except selenium.common.exceptions.NoSuchElementException:
                 driver.quit()
                 print("Request was buggy")
+                pushData = {"chat_id": "-1001499214177", "text": "Request was buggy"}
+                requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
 
         else:
             print("Impftermine in " + locationData[0] + " mit IP "+ip+" geprüft, gibt aber keine :( " + time.strftime("%H:%M:%S"))
+            pushData = {"chat_id": "-1001499214177", "text": "Impftermine in " + locationData[0] + " mit IP "+ip+" geprüft, gibt aber keine :( " + time.strftime("%H:%M:%S")}
+            requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
             driver.quit()
 
 # Wait until the selenium container initialized
@@ -95,6 +108,8 @@ while(True):
     if(int(time.strftime("%H")) > 22):
         pushData = {"token": os.environ['token'], "user": os.environ['user'], "message": "Die APP geht schlafen", "priority": "-2"}
         request = requests.post("https://api.pushover.net/1/messages.json", pushData)
+        pushData = {"chat_id": "-1001499214177", "text": "Die APP geht schlafen"}
+        requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
         time.sleep(25200)
     for server in servers:
         for location in locations:
