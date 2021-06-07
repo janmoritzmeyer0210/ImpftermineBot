@@ -1,6 +1,7 @@
 version: "3"
 services:
   selenium:
+    restart: always
     image: selenium/standalone-chrome:4.0.0
     ports:
     - 4444:4444
@@ -16,6 +17,7 @@ services:
       - code2=${CODE_2}
       - code3=${CODE_3}
   tor:
+    restart: always
     image: dperson/torproxy
     environment:
       - TOR_NewCircuitPeriod=30
