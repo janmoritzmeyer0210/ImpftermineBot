@@ -89,9 +89,9 @@ def scrapePage(locationData, remote):
             print("Impftermine in " + locationData[0] + " mit IP "+ip+" geprüft, gibt aber keine :( " + time.strftime("%H:%M:%S"))
             driver.quit()
 
+# Wait until the selenium container initialized
+time.sleep(25)
 while(True):
-    # Wait until the selenium container initialized
-    time.sleep(25)
     if(int(time.strftime("%H")) > 22):
         pushData = {"token": os.environ['token'], "user": os.environ['user'], "message": "Die APP geht schlafen", "priority": "-2"}
         request = requests.post("https://api.pushover.net/1/messages.json", pushData)
