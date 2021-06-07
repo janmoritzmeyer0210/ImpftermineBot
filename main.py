@@ -21,7 +21,7 @@ def scrapePage(locationData, remote):
 
     driver.get("http://api.ipify.org/")
     ip = driver.find_element_by_css_selector("pre")
-    print("Current IP: "+ip)
+    print("Current IP: "+ip.text)
 
 
     driver.get(locationData[1])
