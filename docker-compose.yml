@@ -64,7 +64,7 @@ services:
       - code2=${CODE_2}
       - code3=${CODE_3}
       - proxy=http://tor-stu:8118
-      - locations=[["Impfzentrum Klinikum Stuttgart in der Liederhalle (Hegel-Saal)","https://002-iz.impfterminservice.de/impftermine/service?plz=70174", "https://002-iz.impfterminservice.de/rest/suche/termincheck?plz=70174&leistungsmerkmale=L920,L921,L922,L923", "@impfenstu", 5],["Impfzentrum am Robert-Bosch-Krankenhaus","https://001-iz.impfterminservice.de/impftermine/service?plz=70376", "https://001-iz.impfterminservice.de/rest/suche/termincheck?plz=70376&leistungsmerkmale=L920,L921,L922,L923", "@impfenstu", 5]]
+      - locations=[["Impfzentrum Klinikum Stuttgart in der Liederhalle (Hegel-Saal)","https://002-iz.impfterminservice.de/impftermine/service?plz=70174", "https://002-iz.impfterminservice.de/rest/suche/termincheck?plz=70174&leistungsmerkmale=L920,L921,L922,L923", "@impfenstu", 500],["Impfzentrum am Robert-Bosch-Krankenhaus","https://001-iz.impfterminservice.de/impftermine/service?plz=70376", "https://001-iz.impfterminservice.de/rest/suche/termincheck?plz=70376&leistungsmerkmale=L920,L921,L922,L923", "@impfenstu", 500]]
       - selenium=http://selenium-stu:4444/wd/hub
   tor-stu:
     restart: always
