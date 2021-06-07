@@ -9,11 +9,9 @@ request = requests.post("https://api.telegram.org/bot"+os.environ['telegram']+"/
 
 # Locations Array is defined in the following structure: Array[Array[Name, Vaccination Center Page, REST Api for appointment check]]
 locations = json.loads(os.environ['locations'])
-# locations = [["Hamburg Messehallen","https://353-iz.impfterminservice.de/impftermine/service?plz=20357", "https://353-iz.impfterminservice.de/rest/suche/termincheck?plz=20357&leistungsmerkmale=L920,L921,L922,L923"]]
-# servers = ["http://selenium:4444/wd/hub","http://10.0.0.3:4444/wd/hub","http://10.0.0.4:4444/wd/hub","http://10.0.0.5:4444/wd/hub","http://10.0.0.2:4444/wd/hub"]
 def scrapePage(locationData, remote):
     # Click through the impftermineservice page to act like a human lol
-    PROXY = os.environ['proxy']  # IP:PORT or HOST:PORT
+    PROXY = os.environ['proxy']
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument('--proxy-server=%s' % PROXY)
     driver = webdriver.Remote(remote, DesiredCapabilities.CHROME, None, None, False, None, chrome_options)
@@ -24,6 +22,7 @@ def scrapePage(locationData, remote):
 
 
     driver.get(locationData[1])
+    print(driver.page_source)
     try:
         driver.find_element_by_css_selector(
             "body > app-root > div > app-page-its-login > div > div > div:nth-child(2) > app-its-login-user > div > div > app-corona-vaccination > div:nth-child(2) > div > div > label:nth-child(2) > span > small").click()
