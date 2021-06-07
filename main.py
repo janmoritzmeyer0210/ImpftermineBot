@@ -22,6 +22,7 @@ def scrapePage(locationData, remote):
 
 
     driver.get(locationData[1])
+    time.sleep(3)
     print(driver.page_source)
     try:
         driver.find_element_by_css_selector(
