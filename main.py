@@ -20,7 +20,8 @@ def scrapePage(locationData, remote):
     driver = webdriver.Remote(remote, DesiredCapabilities.CHROME, None, None, False, None, chrome_options)
 
     driver.get("http://api.ipify.org/")
-    print(driver.page_source)
+    ip = driver.find_element_by_css_selector("pre")
+    print("Current IP: "+ip)
 
 
     driver.get(locationData[1])
@@ -98,4 +99,5 @@ while(True):
     for server in servers:
         for location in locations:
             scrapePage(location, server)
+            time.sleep(10)
         time.sleep(60)
