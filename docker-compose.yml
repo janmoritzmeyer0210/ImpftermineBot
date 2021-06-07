@@ -6,9 +6,16 @@ services:
     - 4444:4444
   scraper:
     build: .
+    depends_on:
+      - tor
     environment:
       - token=${PUSHOVER_TOKEN}
       - user=${PUSHOVER_USER}
       - code1=${CODE_1}
       - code2=${CODE_2}
       - code3=${CODE_3}
+  tor:
+    build: tor-container
+    ports:
+    - 8118:8118
+    - 9050:9050
