@@ -119,5 +119,5 @@ while(True):
         pushData = {"chat_id": "-1001499214177", "text": "Die APP geht schlafen"}
         requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
         time.sleep(25200)
-        for location in locations:
-            scrapePage(location, os.environ['selenium'])
+    for location in locations:
+        scrapePage(location, os.environ['selenium'])
