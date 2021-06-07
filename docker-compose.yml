@@ -6,6 +6,7 @@ services:
     - 4444:4444
   scraper:
     build: .
+    restart: always
     depends_on:
       - tor
     environment:
