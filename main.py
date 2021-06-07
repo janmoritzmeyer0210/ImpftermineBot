@@ -66,10 +66,14 @@ def scrapePage(locationData, remote):
         available = data["termineVorhanden"]
         types = data["vorhandeneLeistungsmerkmale"]
 
+        vacs = {"L920": "Biontech", "L921": "Moderna", "L922": "AstraZeneca", "L923": "Johnson & Johnson"}
+
         # If an appointment is available send an notification to your device, if not send a message without notification which is shown in the Pushover App
         if(available):
             try:
                 pushData = {"chat_id": locationData[2], "text": "Es gibt Impftermine in "+locationData[0]+" !!! " + json.dumps(types)}
+                requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
+                pushData = {"chat_id": locationData[2], "text": "Es gibt folgende Stoffe "+{[vacs[id] for id in types]}}
                 requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
                 pushData = {"token":os.environ['token'],"user":os.environ['user'],"title":"Es gibt Impftermine in "+locationData[0]+" !!!", "message": json.dumps(types), "priority":"1"}
                 requests.post("https://api.pushover.net/1/messages.json", pushData)
@@ -87,6 +91,8 @@ def scrapePage(locationData, remote):
                 availableSlots = driver.find_element_by_css_selector("#itsSearchAppointmentsModal > div > div > div.modal-body > div > div > form > div.d-flex.flex-column.its-slot-pair-search-info > span").text
                 pushData = {"token": os.environ['token'], "user": os.environ['user'], "title": "Es gibt Impftermine in " + locationData[0] + " !!! "+locationData[1], "message": availableSlots, "priority": "1"}
                 requests.post("https://api.pushover.net/1/messages.json", pushData)
+                pushData = {"chat_id": locationData[2], "text": "Es gibt Impftermine in " + locationData[0] + " !!! "+locationData[1]+ " "+availableSlots}
+                requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
                 driver.quit()
                 # Wait to not enter same code more than one time per 10 minutes
                 time.sleep(600)
