@@ -4,6 +4,15 @@ services:
     image: selenium/standalone-chrome:4.0.0
     ports:
     - 4444:4444
+  selenium_video:
+    image: selenium/video:ffmpeg-4.3.1-20210604
+    volumes:
+      - /tmp/videos:/videos
+      depends_on:
+        - selenium
+      environment:
+        - DISPLAY_CONTAINER_NAME=selenium
+        - FILE_NAME=chrome_video.mp4
   scraper:
     build: .
     depends_on:
