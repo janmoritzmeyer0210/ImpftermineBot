@@ -21,7 +21,7 @@ def scrapePage(locationData, remote):
 
     driver.get("http://api.ipify.org/")
     ip = driver.find_element_by_css_selector("pre")
-    print("Current IP: "+ip.text)
+    ip = ip.text
 
 
     driver.get(locationData[1])
@@ -86,7 +86,7 @@ def scrapePage(locationData, remote):
                 print("Request was buggy")
 
         else:
-            print("Impftermine in " + locationData[0] + " mit Server "+remote+" geprüft, gibt aber keine :( " + time.strftime("%H:%M:%S"))
+            print("Impftermine in " + locationData[0] + " mit IP "+ip+" geprüft, gibt aber keine :( " + time.strftime("%H:%M:%S"))
             driver.quit()
 
 while(True):
