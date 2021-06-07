@@ -2,7 +2,6 @@ import os, time, json, requests, selenium
 
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-from selenium.webdriver.common.proxy import Proxy, ProxyType
 
 # Send Test Message to show that the application is running
 pushData = {"chat_id":"-1001499214177","text":"Die APP wurde neu gestartet"}
@@ -31,8 +30,8 @@ def scrapePage(locationData, remote):
     except:
         try:
             for x in range(locationData[4]):
-                driver.find_element_by_css_selector("div.clock")
                 print("Waiting room in "+locationData[0]+"...")
+                driver.find_element_by_css_selector("div.clock")
                 pushData = {"chat_id": "-1001499214177", "text": "Waiting room in "+locationData[0]+"..."}
                 requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
                 time.sleep(10)
