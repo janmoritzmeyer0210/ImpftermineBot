@@ -16,7 +16,7 @@ services:
       - code2=${CODE_2}
       - code3=${CODE_3}
       - proxy=http://tor-hh:8118
-      - locations=[["Hamburg Messehallen","https://353-iz.impfterminservice.de/impftermine/service?plz=20357", "https://353-iz.impfterminservice.de/rest/suche/termincheck?plz=20357&leistungsmerkmale=L920,L921,L922,L923", "@impfenhh", 500]]
+      - locations=[["Hamburg Messehallen","https://353-iz.impfterminservice.de/impftermine/service?plz=20357", "https://353-iz.impfterminservice.de/rest/suche/termincheck?plz=20357&leistungsmerkmale=L920,L921,L922,L923", "@impfenhh", 500], ["Institut für Hygiene und Umwelt Hamburg, Impfzentrum","https://226-iz.impfterminservice.de/impftermine/service?plz=20537", "https://226-iz.impfterminservice.de/rest/suche/termincheck?plz=20537&leistungsmerkmale=L920,L921,L922,L923", "@impfenhh", 500]]
       - selenium=http://selenium-hh:4444/wd/hub
   tor-hh:
     restart: always
@@ -43,6 +43,30 @@ services:
       - locations=[["Tübingen Impfzentrum","https://003-iz.impfterminservice.de/impftermine/service?plz=72072", "https://003-iz.impfterminservice.de/rest/suche/termincheck?plz=72072&leistungsmerkmale=L920,L921,L922,L923", "@impfentue", 500]]
       - selenium=http://selenium-tue:4444/wd/hub
   tor-tue:
+    restart: always
+    image: dperson/torproxy
+    environment:
+      - TOR_NewCircuitPeriod=30
+      - TOR_MaxCircuitDirtiness=240
+  selenium-stu:
+    restart: always
+    image: selenium/standalone-chrome:4.0.0
+  scraper-stu:
+    build: .
+    restart: always
+    depends_on:
+      - tor-tue
+    environment:
+      - token=${PUSHOVER_TOKEN}
+      - telegram=${TELEGRAM_TOKEN}
+      - user=${PUSHOVER_USER}
+      - code1=${CODE_1}
+      - code2=${CODE_2}
+      - code3=${CODE_3}
+      - proxy=http://tor-stu:8118
+      - locations=[["Impfzentrum Klinikum Stuttgart in der Liederhalle (Hegel-Saal)","https://002-iz.impfterminservice.de/impftermine/service?plz=70174", "https://002-iz.impfterminservice.de/rest/suche/termincheck?plz=70174&leistungsmerkmale=L920,L921,L922,L923", "@impfenstu", 5],["Impfzentrum am Robert-Bosch-Krankenhaus","https://001-iz.impfterminservice.de/impftermine/service?plz=70376", "https://001-iz.impfterminservice.de/rest/suche/termincheck?plz=70376&leistungsmerkmale=L920,L921,L922,L923", "@impfenstu", 5]]
+      - selenium=http://selenium-stu:4444/wd/hub
+  tor-stu:
     restart: always
     image: dperson/torproxy
     environment:
