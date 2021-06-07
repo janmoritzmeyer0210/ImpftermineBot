@@ -11,13 +11,12 @@ pushData = {"chat_id":"-1001499214177","text":"Die APP wurde neu gestartet"}
 request = requests.post("https://api.telegram.org/bot"+os.environ['telegram']+"/sendMessage", pushData)
 
 # Locations Array is defined in the following structure: Array[Array[Name, Vaccination Center Page, REST Api for appointment check]]
-locations = [["Hamburg Messehallen","https://353-iz.impfterminservice.de/impftermine/service?plz=20357", "https://353-iz.impfterminservice.de/rest/suche/termincheck?plz=20357&leistungsmerkmale=L920,L921,L922,L923", "@impfenhh", 5],["Tübingen Impfzentrum","https://003-iz.impfterminservice.de/impftermine/service?plz=72072", "https://003-iz.impfterminservice.de/rest/suche/termincheck?plz=72072&leistungsmerkmale=L920,L921,L922,L923", "@impfentue", 500],["Impfzentrum Klinikum Stuttgart in der Liederhalle (Hegel-Saal)","https://002-iz.impfterminservice.de/impftermine/service?plz=70174", "https://002-iz.impfterminservice.de/rest/suche/termincheck?plz=70174&leistungsmerkmale=L920,L921,L922,L923", "@impfenstu", 5],["Impfzentrum am Robert-Bosch-Krankenhaus","https://001-iz.impfterminservice.de/impftermine/service?plz=70376", "https://001-iz.impfterminservice.de/rest/suche/termincheck?plz=70376&leistungsmerkmale=L920,L921,L922,L923", "@impfenstu", 5]]
+locations = json.parse(os.environ['locations'])
 # locations = [["Hamburg Messehallen","https://353-iz.impfterminservice.de/impftermine/service?plz=20357", "https://353-iz.impfterminservice.de/rest/suche/termincheck?plz=20357&leistungsmerkmale=L920,L921,L922,L923"]]
 # servers = ["http://selenium:4444/wd/hub","http://10.0.0.3:4444/wd/hub","http://10.0.0.4:4444/wd/hub","http://10.0.0.5:4444/wd/hub","http://10.0.0.2:4444/wd/hub"]
-servers = ["http://selenium:4444/wd/hub"]
 def scrapePage(locationData, remote):
     # Click through the impftermineservice page to act like a human lol
-    PROXY = "http://tor:8118"  # IP:PORT or HOST:PORT
+    PROXY = os.environ['proxy']  # IP:PORT or HOST:PORT
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument('--proxy-server=%s' % PROXY)
     driver = webdriver.Remote(remote, DesiredCapabilities.CHROME, None, None, False, None, chrome_options)
@@ -120,6 +119,5 @@ while(True):
         pushData = {"chat_id": "-1001499214177", "text": "Die APP geht schlafen"}
         requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
         time.sleep(25200)
-    for server in servers:
         for location in locations:
-            scrapePage(location, server)
+            scrapePage(location, os.environ['selenium'])

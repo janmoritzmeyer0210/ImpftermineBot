@@ -1,15 +1,13 @@
 version: "3"
 services:
-  selenium:
+  selenium-hh:
     restart: always
     image: selenium/standalone-chrome:4.0.0
-    ports:
-    - 4444:4444
-  scraper:
+  scraper-hh:
     build: .
     restart: always
     depends_on:
-      - tor
+      - tor-hh
     environment:
       - token=${PUSHOVER_TOKEN}
       - telegram=${TELEGRAM_TOKEN}
@@ -17,9 +15,36 @@ services:
       - code1=${CODE_1}
       - code2=${CODE_2}
       - code3=${CODE_3}
-  tor:
+      - proxy=http://tor-hh:8118
+      - locations=[["Hamburg Messehallen","https://353-iz.impfterminservice.de/impftermine/service?plz=20357", "https://353-iz.impfterminservice.de/rest/suche/termincheck?plz=20357&leistungsmerkmale=L920,L921,L922,L923", "@impfenhh", 500]]
+      - selenium=http://selenium-hh:4444/wd/hub
+  tor-hh:
     restart: always
     image: dperson/torproxy
     environment:
       - TOR_NewCircuitPeriod=30
-      - TOR_MaxCircuitDirtiness=120
+      - TOR_MaxCircuitDirtiness=30
+  selenium-tue:
+    restart: always
+    image: selenium/standalone-chrome:4.0.0
+  scraper-tue:
+    build: .
+    restart: always
+    depends_on:
+      - tor-tue
+    environment:
+      - token=${PUSHOVER_TOKEN}
+      - telegram=${TELEGRAM_TOKEN}
+      - user=${PUSHOVER_USER}
+      - code1=${CODE_1}
+      - code2=${CODE_2}
+      - code3=${CODE_3}
+      - proxy=http://tor-tue:8118
+      - locations=[["Tübingen Impfzentrum","https://003-iz.impfterminservice.de/impftermine/service?plz=72072", "https://003-iz.impfterminservice.de/rest/suche/termincheck?plz=72072&leistungsmerkmale=L920,L921,L922,L923", "@impfentue", 500]]
+      - selenium=http://selenium-tue:4444/wd/hub
+  tor-tue:
+    restart: always
+    image: dperson/torproxy
+    environment:
+      - TOR_NewCircuitPeriod=30
+      - TOR_MaxCircuitDirtiness=240
