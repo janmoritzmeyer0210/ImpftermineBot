@@ -85,7 +85,7 @@ def scrapePage(locationData, remote):
                 driver.find_element_by_css_selector("body > app-root > div > app-page-its-search > div > div > div:nth-child(2) > div > div > div:nth-child(5) > div > div:nth-child(1) > div.its-search-step-body > div.its-search-step-content > button").click()
                 time.sleep(2)
                 availableSlots = driver.find_element_by_css_selector("#itsSearchAppointmentsModal > div > div > div.modal-body > div > div > form > div.d-flex.flex-column.its-slot-pair-search-info > span").text
-                pushData = {"token": os.environ['token'], "user": os.environ['user'], "title": "Es gibt Impftermine in " + locationData[0] + " !!!", "message": availableSlots, "priority": "1"}
+                pushData = {"token": os.environ['token'], "user": os.environ['user'], "title": "Es gibt Impftermine in " + locationData[0] + " !!! "+locationData[1], "message": availableSlots, "priority": "1"}
                 requests.post("https://api.pushover.net/1/messages.json", pushData)
                 driver.quit()
                 # Wait to not enter same code more than one time per 10 minutes
