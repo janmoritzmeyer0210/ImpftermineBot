@@ -10,8 +10,8 @@ request = requests.post("https://api.pushover.net/1/messages.json", pushData)
 # Locations Array is defined in the following structure: Array[Array[Name, Vaccination Center Page, REST Api for appointment check]]
 locations = [["Hamburg Messehallen","https://353-iz.impfterminservice.de/impftermine/service?plz=20357", "https://353-iz.impfterminservice.de/rest/suche/termincheck?plz=20357&leistungsmerkmale=L920,L921,L922,L923"],["Tübingen Impfzentrum","https://003-iz.impfterminservice.de/impftermine/service?plz=72072", "https://003-iz.impfterminservice.de/rest/suche/termincheck?plz=72072&leistungsmerkmale=L920,L921,L922,L923"]]
 # locations = [["Hamburg Messehallen","https://353-iz.impfterminservice.de/impftermine/service?plz=20357", "https://353-iz.impfterminservice.de/rest/suche/termincheck?plz=20357&leistungsmerkmale=L920,L921,L922,L923"]]
-servers = ["http://selenium:4444/wd/hub","http://10.0.0.3:4444/wd/hub","http://10.0.0.4:4444/wd/hub","http://10.0.0.5:4444/wd/hub","http://10.0.0.2:4444/wd/hub"]
-
+# servers = ["http://selenium:4444/wd/hub","http://10.0.0.3:4444/wd/hub","http://10.0.0.4:4444/wd/hub","http://10.0.0.5:4444/wd/hub","http://10.0.0.2:4444/wd/hub"]
+servers = ["http://selenium:4444/wd/hub"]
 def scrapePage(locationData, remote):
     # Click through the impftermineservice page to act like a human lol
     PROXY = "http://tor:8118"  # IP:PORT or HOST:PORT
@@ -19,9 +19,6 @@ def scrapePage(locationData, remote):
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument('--proxy-server=%s' % PROXY)
     driver = webdriver.Remote(remote, DesiredCapabilities.CHROME, None, None, False, None, chrome_options)
-
-    driver.get("http://api.ipify.org/")
-    print("Assigned IP: "+driver.page_source)
 
     driver.get(locationData[1])
     try:
@@ -49,7 +46,7 @@ def scrapePage(locationData, remote):
         driver.quit()
         pushData = {"token": os.environ['token'], "user": os.environ['user'], "message": "Der Bot "+remote+" wurde in "+locationData[0]+" gesperrt :(", "priority": "1"}
         requests.post("https://api.pushover.net/1/messages.json", pushData)
-        time.sleep(300)
+        time.sleep(30)
     else:
         # Decode json data
         data = json.loads(jsonData)
@@ -85,7 +82,7 @@ def scrapePage(locationData, remote):
                 print("Request was buggy")
 
         else:
-            print("Impftermine in " + locationData[0] + " mit Server "+remote+" geprüft, gibt aber keine :(" + time.strftime("%H:%S:%M"))
+            print("Impftermine in " + locationData[0] + " mit Server "+remote+" geprüft, gibt aber keine :(" + time.strftime("%H:%M:%S"))
             driver.quit()
 
 while(True):
@@ -98,4 +95,4 @@ while(True):
     for server in servers:
         for location in locations:
             scrapePage(location, server)
-        time.sleep(30)
+        time.sleep(10)
