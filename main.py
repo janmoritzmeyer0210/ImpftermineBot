@@ -82,7 +82,7 @@ def scrapePage(locationData, remote):
                 print("Request was buggy")
 
         else:
-            print("Impftermine in " + locationData[0] + " mit Server "+remote+" geprüft, gibt aber keine :(" + time.strftime("%H:%M:%S"))
+            print("Impftermine in " + locationData[0] + " mit Server "+remote+" geprüft, gibt aber keine :( " + time.strftime("%H:%M:%S"))
             driver.quit()
 
 while(True):

@@ -18,6 +18,3 @@ services:
     image: dperson/torproxy
     environment:
       - TOR_NewCircuitPeriod=30
-    ports:
-    - 8118:8118
-    - 9050:9050
