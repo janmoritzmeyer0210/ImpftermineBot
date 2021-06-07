@@ -1,0 +1,21 @@
+version: "3"
+services:
+  selenium-xy:
+    restart: always
+    image: selenium/standalone-chrome:4.0.0
+  scraper-xy:
+    build: .
+    restart: always
+    depends_on:
+      - tor-hh
+    environment:
+      - telegram=${TELEGRAM_TOKEN}
+      - proxy=http://tor-hh:8118
+      - locations=[["Hamburg Messehallen","https://353-iz.impfterminservice.de/impftermine/service?plz=20357", "https://353-iz.impfterminservice.de/rest/suche/termincheck?plz=20357&leistungsmerkmale=L920,L921,L922,L923", "@impfenhh", 500, "ABCD-EFGH-IJKL"], ["Institut für Hygiene und Umwelt Hamburg, Impfzentrum","https://226-iz.impfterminservice.de/impftermine/service?plz=20537", "https://226-iz.impfterminservice.de/rest/suche/termincheck?plz=20537&leistungsmerkmale=L920,L921,L922,L923", "@impfenhh", 500, "ABCD-EFGH-IJKL"]]
+      - selenium=http://selenium-hh:4444/wd/hub
+  tor-xy:
+    restart: always
+    image: dperson/torproxy
+    environment:
+      - TOR_NewCircuitPeriod=30
+      - TOR_MaxCircuitDirtiness=30

@@ -1,12 +1,10 @@
 import os, time, json, requests, selenium
+
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.common.proxy import Proxy, ProxyType
 
 # Send Test Message to show that the application is running
-pushData = {"token":os.environ['token'],"user":os.environ['user'],"message":"Die APP wurde neu gestartet", "priority":"-2"}
-request = requests.post("https://api.pushover.net/1/messages.json", pushData)
-
 pushData = {"chat_id":"-1001499214177","text":"Die APP wurde neu gestartet"}
 request = requests.post("https://api.telegram.org/bot"+os.environ['telegram']+"/sendMessage", pushData)
 
@@ -68,31 +66,39 @@ def scrapePage(locationData, remote):
         available = data["termineVorhanden"]
         types = data["vorhandeneLeistungsmerkmale"]
 
-        vacs = {"L920": "Biontech", "L921": "Moderna", "L922": "AstraZeneca", "L923": "Johnson & Johnson"}
-
         # If an appointment is available send an notification to your device, if not send a message without notification which is shown in the Pushover App
         if(available):
             try:
-                pushData = {"chat_id": locationData[3], "text": "Es gibt Impftermine in "+locationData[0]+" !!! " + json.dumps(types)}
+                silent = False
+                types_str = ""
+                for type in types:
+                    if type == "L920":
+                        types_str = types_str + "BioNTech"
+                    elif type == "L921":
+                        types_str = types_str + "Moderna"
+                    elif type == "L922":
+                        types_str = types_str + "AstraZeneca"
+                        silent = True
+                    elif type == "L923":
+                        types_str = types_str + "Johnson & Johnson"
+                        silent = True
+
+                pushData = {"chat_id": locationData[3], "text": "Es gibt Impftermine in "+locationData[0]+" für folgende Stoffe: " + types_str+". Buchbar unter folgendem Link: "+locationData[1], "silent":silent}
                 requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
-                pushData = {"chat_id": locationData[3], "text": "Es gibt folgende Stoffe "+{[vacs[id] for id in types]}}
-                requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
-                pushData = {"token":os.environ['token'],"user":os.environ['user'],"title":"Es gibt Impftermine in "+locationData[0]+" !!!", "message": json.dumps(types), "priority":"1"}
-                requests.post("https://api.pushover.net/1/messages.json", pushData)
                 driver.get(locationData[1])
                 time.sleep(1)
                 driver.find_element_by_css_selector("body > app-root > div > app-page-its-login > div > div > div:nth-child(2) > app-its-login-user > div > div > app-corona-vaccination > div:nth-child(2) > div > div > label:nth-child(1) > span").click()
                 time.sleep(1)
-                driver.find_element_by_css_selector("body > app-root > div > app-page-its-login > div > div > div:nth-child(2) > app-its-login-user > div > div > app-corona-vaccination > div:nth-child(3) > div > div > div > div.ets-login-form-section.in > app-corona-vaccination-yes > form > div:nth-child(1) > label > app-ets-input-code > div > div:nth-child(1) > label > input").send_keys(os.environ['code1'])
-                driver.find_element_by_css_selector("body > app-root > div > app-page-its-login > div > div > div:nth-child(2) > app-its-login-user > div > div > app-corona-vaccination > div:nth-child(3) > div > div > div > div.ets-login-form-section.in > app-corona-vaccination-yes > form > div:nth-child(1) > label > app-ets-input-code > div > div:nth-child(3) > label > input").send_keys(os.environ['code2'])
-                driver.find_element_by_css_selector("body > app-root > div > app-page-its-login > div > div > div:nth-child(2) > app-its-login-user > div > div > app-corona-vaccination > div:nth-child(3) > div > div > div > div.ets-login-form-section.in > app-corona-vaccination-yes > form > div:nth-child(1) > label > app-ets-input-code > div > div:nth-child(5) > label > input").send_keys(os.environ['code3'])
+                code = locations[5]
+                code = code.split("-")
+                driver.find_element_by_css_selector("body > app-root > div > app-page-its-login > div > div > div:nth-child(2) > app-its-login-user > div > div > app-corona-vaccination > div:nth-child(3) > div > div > div > div.ets-login-form-section.in > app-corona-vaccination-yes > form > div:nth-child(1) > label > app-ets-input-code > div > div:nth-child(1) > label > input").send_keys(code[0])
+                driver.find_element_by_css_selector("body > app-root > div > app-page-its-login > div > div > div:nth-child(2) > app-its-login-user > div > div > app-corona-vaccination > div:nth-child(3) > div > div > div > div.ets-login-form-section.in > app-corona-vaccination-yes > form > div:nth-child(1) > label > app-ets-input-code > div > div:nth-child(3) > label > input").send_keys(code[1])
+                driver.find_element_by_css_selector("body > app-root > div > app-page-its-login > div > div > div:nth-child(2) > app-its-login-user > div > div > app-corona-vaccination > div:nth-child(3) > div > div > div > div.ets-login-form-section.in > app-corona-vaccination-yes > form > div:nth-child(1) > label > app-ets-input-code > div > div:nth-child(5) > label > input").send_keys(code[2])
                 driver.find_element_by_css_selector("body > app-root > div > app-page-its-login > div > div > div:nth-child(2) > app-its-login-user > div > div > app-corona-vaccination > div:nth-child(3) > div > div > div > div.ets-login-form-section.in > app-corona-vaccination-yes > form > div:nth-child(2) > button").click()
                 time.sleep(5)
                 driver.find_element_by_css_selector("body > app-root > div > app-page-its-search > div > div > div:nth-child(2) > div > div > div:nth-child(5) > div > div:nth-child(1) > div.its-search-step-body > div.its-search-step-content > button").click()
                 time.sleep(2)
                 availableSlots = driver.find_element_by_css_selector("#itsSearchAppointmentsModal > div > div > div.modal-body > div > div > form > div.d-flex.flex-column.its-slot-pair-search-info > span").text
-                pushData = {"token": os.environ['token'], "user": os.environ['user'], "title": "Es gibt Impftermine in " + locationData[0] + " !!! "+locationData[1], "message": availableSlots, "priority": "1"}
-                requests.post("https://api.pushover.net/1/messages.json", pushData)
                 pushData = {"chat_id": locationData[3], "text": "Es gibt Impftermine in " + locationData[0] + " !!! "+locationData[1]+ " "+availableSlots}
                 requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
                 driver.quit()
@@ -100,8 +106,7 @@ def scrapePage(locationData, remote):
                 time.sleep(600)
             except selenium.common.exceptions.NoSuchElementException:
                 driver.quit()
-                print("Request was buggy")
-                pushData = {"chat_id": "-1001499214177", "text": "Request was buggy"}
+                pushData = {"chat_id": "-1001499214177", "text": "Request was buggy "+driver.page_source}
                 requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
 
         else:
@@ -113,12 +118,12 @@ def scrapePage(locationData, remote):
 # Wait until the selenium container initialized
 time.sleep(25)
 while(True):
-    if(int(time.strftime("%H")) > 22):
-        pushData = {"token": os.environ['token'], "user": os.environ['user'], "message": "Die APP geht schlafen", "priority": "-2"}
-        request = requests.post("https://api.pushover.net/1/messages.json", pushData)
-        pushData = {"chat_id": "-1001499214177", "text": "Die APP geht schlafen"}
-        requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
-        time.sleep(25200)
+    # if(int(time.strftime("%H")) > 22):
+    #     pushData = {"token": os.environ['token'], "user": os.environ['user'], "message": "Die APP geht schlafen", "priority": "-2"}
+    #     request = requests.post("https://api.pushover.net/1/messages.json", pushData)
+    #     pushData = {"chat_id": "-1001499214177", "text": "Die APP geht schlafen"}
+    #     requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
+    #     time.sleep(25200)
     for location in locations:
         scrapePage(location, os.environ['selenium'])
         time.sleep(10)
