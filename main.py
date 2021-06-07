@@ -11,7 +11,7 @@ pushData = {"chat_id":"-1001499214177","text":"Die APP wurde neu gestartet"}
 request = requests.post("https://api.telegram.org/bot"+os.environ['telegram']+"/sendMessage", pushData)
 
 # Locations Array is defined in the following structure: Array[Array[Name, Vaccination Center Page, REST Api for appointment check]]
-locations = [["Hamburg Messehallen","https://353-iz.impfterminservice.de/impftermine/service?plz=20357", "https://353-iz.impfterminservice.de/rest/suche/termincheck?plz=20357&leistungsmerkmale=L920,L921,L922,L923", "@impfenhh", 5],["Tübingen Impfzentrum","https://003-iz.impfterminservice.de/impftermine/service?plz=72072", "https://003-iz.impfterminservice.de/rest/suche/termincheck?plz=72072&leistungsmerkmale=L920,L921,L922,L923", "@impfentue", 5],["Impfzentrum Klinikum Stuttgart in der Liederhalle (Hegel-Saal)","https://002-iz.impfterminservice.de/impftermine/service?plz=70174", "https://002-iz.impfterminservice.de/rest/suche/termincheck?plz=70174&leistungsmerkmale=L920,L921,L922,L923", "@impfenstu", 5],["Impfzentrum am Robert-Bosch-Krankenhaus","https://001-iz.impfterminservice.de/impftermine/service?plz=70376", "https://001-iz.impfterminservice.de/rest/suche/termincheck?plz=70376&leistungsmerkmale=L920,L921,L922,L923", "@impfenstu", 5]]
+locations = [["Hamburg Messehallen","https://353-iz.impfterminservice.de/impftermine/service?plz=20357", "https://353-iz.impfterminservice.de/rest/suche/termincheck?plz=20357&leistungsmerkmale=L920,L921,L922,L923", "@impfenhh", 5],["Tübingen Impfzentrum","https://003-iz.impfterminservice.de/impftermine/service?plz=72072", "https://003-iz.impfterminservice.de/rest/suche/termincheck?plz=72072&leistungsmerkmale=L920,L921,L922,L923", "@impfentue", 500],["Impfzentrum Klinikum Stuttgart in der Liederhalle (Hegel-Saal)","https://002-iz.impfterminservice.de/impftermine/service?plz=70174", "https://002-iz.impfterminservice.de/rest/suche/termincheck?plz=70174&leistungsmerkmale=L920,L921,L922,L923", "@impfenstu", 5],["Impfzentrum am Robert-Bosch-Krankenhaus","https://001-iz.impfterminservice.de/impftermine/service?plz=70376", "https://001-iz.impfterminservice.de/rest/suche/termincheck?plz=70376&leistungsmerkmale=L920,L921,L922,L923", "@impfenstu", 5]]
 # locations = [["Hamburg Messehallen","https://353-iz.impfterminservice.de/impftermine/service?plz=20357", "https://353-iz.impfterminservice.de/rest/suche/termincheck?plz=20357&leistungsmerkmale=L920,L921,L922,L923"]]
 # servers = ["http://selenium:4444/wd/hub","http://10.0.0.3:4444/wd/hub","http://10.0.0.4:4444/wd/hub","http://10.0.0.5:4444/wd/hub","http://10.0.0.2:4444/wd/hub"]
 servers = ["http://selenium:4444/wd/hub"]
@@ -53,8 +53,6 @@ def scrapePage(locationData, remote):
     # If the response is {} we probably got detected and our IP is blocked. Therefore we wait 10 minutes until we continue
     if(jsonData == "{}"):
         driver.quit()
-        pushData = {"token": os.environ['token'], "user": os.environ['user'], "message": "Der Bot wurde in "+locationData[0]+" mit der IP "+ip+" gesperrt :(", "priority": "1"}
-        requests.post("https://api.pushover.net/1/messages.json", pushData)
         pushData = {"chat_id": "-1001499214177", "text": "Der Bot wurde in "+locationData[0]+" mit der IP "+ip+" gesperrt :("}
         requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
         time.sleep(30)
