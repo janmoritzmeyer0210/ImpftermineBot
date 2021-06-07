@@ -32,7 +32,7 @@ def scrapePage(locationData, remote):
         try:
             while True:
                 driver.find_element_by_css_selector("div.clock")
-                print("Waiting room...")
+                print("Waiting room in "+locationData[0]+"...")
                 time.sleep(2)
         except:
             print("We are through")
