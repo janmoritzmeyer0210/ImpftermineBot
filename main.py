@@ -47,8 +47,13 @@ def scrapePage(locationData, remote):
     time.sleep(5)
     driver.get(locationData[2])
     # Get Json Data which shows available appointments
-    jsonData = driver.find_element_by_css_selector("pre")
-    jsonData = jsonData.text
+    try:
+        jsonData = driver.find_element_by_css_selector("pre")
+        jsonData = jsonData.text
+    except:
+        pushData = {"chat_id": "-1001499214177", "text": "Es gab einen Bug, Webdata: " + driver.page_source}
+        requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
+        jsonData = "{}"
 
     # If the response is {} we probably got detected and our IP is blocked. Therefore we wait 10 minutes until we continue
     if(jsonData == "{}"):
