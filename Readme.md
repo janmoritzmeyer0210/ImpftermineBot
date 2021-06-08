@@ -4,6 +4,7 @@ This Python Bot crawls the impfterminservice.de page and searches for avaialable
 
 ## Telegram Channels
 - [Hamburg](https://t.me/corona_impftermine_hh)
+- [Stuttgart & Umgebung](https://t.me/corona_impftermine_str)
 
 ## Concept
 You can run multiple bots on the same machine. For every bot you need:
