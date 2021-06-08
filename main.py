@@ -105,11 +105,11 @@ def sendMessage(locationData):
                 types_str = types_str + "Moderna"
                 chat_id = locationData[3]
             elif type == "L922":
-                types_str = types_str + "AstraZeneca (60+)"
+                types_str = types_str + "AstraZeneca (nur für 60+ buchbar)"
                 silent = True
                 chat_id = locationData[4]
             elif type == "L923":
-                types_str = types_str + "Johnson & Johnson (60+)"
+                types_str = types_str + "Johnson & Johnson (nur für 60+ buchbar)"
                 silent = True
                 chat_id = locationData[4]
 
