@@ -36,10 +36,10 @@ def scrapePage(locationData, remote):
     for x in range(50):
         print(x)
         if check_exists_by_css_selector("body > app-root > div > app-page-its-login > div > div > div:nth-child(2) > app-its-login-user > div > div > app-corona-vaccination > div:nth-child(2) > div > div > label:nth-child(2) > span > small" ,driver):
-            print("Side loading took "+x/2+" seconds")
+            print("Side loading took "+str(x/2)+" seconds")
             break;
         if check_exists_by_css_selector("div.clock" ,driver):
-            print("Side loading took " + x / 2 + " seconds")
+            print("Side loading took " + str(x/2) + " seconds")
             break;
         time.sleep(0.5)
     try:
@@ -132,7 +132,7 @@ def scrapePage(locationData, remote):
             requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
             driver.quit()
 
-# Wait until the selenium container initialized
+# Wait until the selenium and tor containers are initialized
 time.sleep(25)
 while(True):
     # if(int(time.strftime("%H")) > 22):
