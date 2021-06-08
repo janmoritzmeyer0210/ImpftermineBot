@@ -174,5 +174,6 @@ while(True):
                 if not checkForAppointments(location):
                     consistent = False
                 sendMessage(location)
-        closeDriver(location)
+        driver.quit()
+        # closeDriver(location)
         time.sleep(10)
