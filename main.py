@@ -47,7 +47,7 @@ def scrapePage(locationData, remote):
     except Exception as e:
         print('Failed clicking button: '+str(e))
         try:
-            for x in range(locationData[4]):
+            for x in range(locationData[5]):
                 driver.find_element_by_css_selector("div.clock")
                 pushData = {"chat_id": "-1001499214177", "text": "Waiting room in "+locationData[0]+"..."}
                 requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
@@ -87,25 +87,30 @@ def scrapePage(locationData, remote):
             try:
                 silent = False
                 types_str = ""
+                chat_id = "-1001499214177"
                 for type in types:
                     if type == "L920":
                         types_str = types_str + "BioNTech"
+                        chat_id = locationData[3]
                     elif type == "L921":
                         types_str = types_str + "Moderna"
+                        chat_id = locationData[3]
                     elif type == "L922":
                         types_str = types_str + "AstraZeneca (60+)"
                         silent = True
+                        chat_id = locationData[4]
                     elif type == "L923":
                         types_str = types_str + "Johnson & Johnson (60+)"
                         silent = True
+                        chat_id = locationData[4]
 
-                pushData = {"chat_id": locationData[3], "text": "Es gibt Impftermine in "+locationData[0]+" für folgende Stoffe: " + types_str+". Buchbar unter folgendem Link: "+locationData[1], "disable_notification":silent}
+                pushData = {"chat_id": chat_id, "text": "Es gibt Impftermine in "+locationData[0]+" für folgende Stoffe: " + types_str+". Buchbar unter folgendem Link: "+locationData[1], "disable_notification":silent}
                 requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
                 driver.get(locationData[1])
                 time.sleep(1)
                 driver.find_element_by_css_selector("body > app-root > div > app-page-its-login > div > div > div:nth-child(2) > app-its-login-user > div > div > app-corona-vaccination > div:nth-child(2) > div > div > label:nth-child(1) > span").click()
                 time.sleep(1)
-                code = locations[5]
+                code = locationData[6]
                 code = code.split("-")
                 driver.find_element_by_css_selector("body > app-root > div > app-page-its-login > div > div > div:nth-child(2) > app-its-login-user > div > div > app-corona-vaccination > div:nth-child(3) > div > div > div > div.ets-login-form-section.in > app-corona-vaccination-yes > form > div:nth-child(1) > label > app-ets-input-code > div > div:nth-child(1) > label > input").send_keys(code[0])
                 driver.find_element_by_css_selector("body > app-root > div > app-page-its-login > div > div > div:nth-child(2) > app-its-login-user > div > div > app-corona-vaccination > div:nth-child(3) > div > div > div > div.ets-login-form-section.in > app-corona-vaccination-yes > form > div:nth-child(1) > label > app-ets-input-code > div > div:nth-child(3) > label > input").send_keys(code[1])
@@ -115,7 +120,7 @@ def scrapePage(locationData, remote):
                 driver.find_element_by_css_selector("body > app-root > div > app-page-its-search > div > div > div:nth-child(2) > div > div > div:nth-child(5) > div > div:nth-child(1) > div.its-search-step-body > div.its-search-step-content > button").click()
                 time.sleep(2)
                 availableSlots = driver.find_element_by_css_selector("#itsSearchAppointmentsModal > div > div > div.modal-body > div > div > form > div.d-flex.flex-column.its-slot-pair-search-info > span").text
-                pushData = {"chat_id": locationData[3], "text": "Es gibt Impftermine in " + locationData[0] + " !!! "+locationData[1]+ " "+availableSlots}
+                pushData = {"chat_id": chat_id, "text": "Es gibt Impftermine in " + locationData[0] + " !!! "+locationData[1]+ " "+availableSlots}
                 requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
                 driver.quit()
                 # Wait to not enter same code more than one time per 10 minutes
