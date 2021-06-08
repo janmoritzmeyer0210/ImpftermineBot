@@ -1,18 +1,28 @@
 # ImpftermineBot
 
-This Python Bot crawls the impfterminservice.de page and searches for avaialable Slots in desired locations using Selenium. Notification service is based on the [PUSHOVER](https://pushover.net/) Service.
+This Python Bot crawls the impfterminservice.de page and searches for avaialable Slots in desired locations using Selenium and tor based proxy. Notification service is based on a telegram bot. Full configuration can be done in the docker-compose.yml file
 
-## Setup Pushover
-Go to [Pushover](https://pushover.net/), create an account, an application and download the App to your device. After that set the following enviroment Variables for your User:
-- PUSHOVER_TOKEN (The Token for your Pushover Application) 
-- PUSHOVER_USER (The Token for your Pushover User)
+## Telegram Channels
+- [Hamburg](https://t.me/corona_impftermine_hh)
+
+## Concept
+You can run multiple bots on the same machine. For every bot you need:
+- 1 selenium container
+- 1 Scraper container
+- 1 tor proxy
+
+Every bot goes through the locations array, checks for appointments and sends an telegram message if an appointment is available. The Location Array has the following structure:
+`` [["Name of Location", "URL of Location Page", "URL of Location REST Url", "Telegram Channel for mRNA", "Telegram Channel for Vektor", (seconds * 10) of maximum waiting time in waiting room before proceeding to next location, "Vermittlungscode"]] ``
+
+## Setup
+Copy docker-compose-example.yml to docker-compose.yml
+- Set the environment Variable ``TELEGRAM_TOKEN`` or set it in the docker-compose file
+- Set the locations Variable
+- Set the proxy and selenium variable according to your container names
 
 ## Install
 After you've set the Enviroment Variables, install docker and docker-compose and docker-compose up -d should do the rest :)
 
-## Install additional selenium Servers
-Run the following Command \
-`` apt-get update && apt-get upgrade -y && apt-get install docker.io -y && docker run -d -p 4444:4444 selenium/standalone-chrome:4.0.0``
 
 ## Todos
 - Twitter Integration

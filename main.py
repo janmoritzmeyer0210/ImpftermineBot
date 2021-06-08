@@ -142,7 +142,7 @@ def sendMessage(locationData):
         availableSlots = driver.find_element_by_css_selector(
             "#itsSearchAppointmentsModal > div > div > div.modal-body > div > div > form > div.d-flex.flex-column.its-slot-pair-search-info > span").text
         pushData = {"chat_id": "-1001499214177",
-                    "text": "Bei der Test-Buchung gab es folgende Nachricht: " + availableSlots}
+                    "text": "Bei der Test-Buchung gab es folgende Nachricht: " + availableSlots + locationData[0] + types_str}
         requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
         driver.quit()
         # Wait to not enter same code more than one time per 10 minutes
