@@ -35,10 +35,12 @@ def scrapePage(locationData, remote):
     driver.get(locationData[1])
     for x in range(50):
         if check_exists_by_css_selector("body > app-root > div > app-page-its-login > div > div > div:nth-child(2) > app-its-login-user > div > div > app-corona-vaccination > div:nth-child(2) > div > div > label:nth-child(2) > span > small" ,driver):
-            print("Side loading took "+str(x/2)+" seconds")
+            pushData = {"chat_id": "-1001499214177", "text": "Side loading took "+str(x/2)+" seconds"}
+            requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
             break;
         if check_exists_by_css_selector("div.clock" ,driver):
-            print("Side loading took " + str(x/2) + " seconds")
+            pushData = {"chat_id": "-1001499214177", "text": "Side loading took " + str(x / 2) + " seconds"}
+            requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
             break;
         time.sleep(0.5)
     try:
@@ -131,7 +133,6 @@ def scrapePage(locationData, remote):
                 requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
 
         else:
-            print("Impftermine in " + locationData[0] + " mit IP "+ip+" geprüft, gibt aber keine :( " + time.strftime("%H:%M:%S"))
             pushData = {"chat_id": "-1001499214177", "text": "Impftermine in " + locationData[0] + " mit IP "+ip+" geprüft, gibt aber keine :( " + time.strftime("%H:%M:%S")}
             requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
             driver.quit()
