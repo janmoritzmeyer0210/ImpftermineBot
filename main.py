@@ -14,7 +14,7 @@ locations = json.loads(os.environ['locations'])
 
 def check_exists_by_css_selector(selector, webdriver):
     try:
-        webdriver.find_element_by_xpath(selector)
+        webdriver.find_element_by_css_selector(selector)
     except NoSuchElementException:
         return False
     return True
