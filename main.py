@@ -149,8 +149,8 @@ def sendMessage(locationData):
         driver.quit()
         # Wait to not enter same code more than one time per 10 minutes
         time.sleep(600)
-    except selenium.common.exceptions.NoSuchElementException:
-        driver.quit()
+    except Exception as e:
+        print('Failed clicking button: ' + str(e))
         pushData = {"chat_id": "-1001499214177", "text": "Request was buggy " + driver.page_source}
         requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
 
