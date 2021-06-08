@@ -154,6 +154,13 @@ def sendMessage(locationData):
         pushData = {"chat_id": "-1001499214177", "text": "Request was buggy " + driver.page_source}
         requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
 
+def closeDriver(locationData):
+    global driver
+    pushData = {"chat_id": "-1001499214177", "text": "Impftermine in " + locationData[
+        0] + " mit IP " + ip + " geprüft, gibt aber keine :( " + time.strftime("%H:%M:%S")}
+    requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
+    driver.quit()
+
 
 # Wait until the selenium and tor containers are initialized
 time.sleep(25)
@@ -167,4 +174,5 @@ while(True):
                 if not checkForAppointments(location):
                     consistent = False
                 sendMessage(location)
+        closeDriver(location)
         time.sleep(10)
