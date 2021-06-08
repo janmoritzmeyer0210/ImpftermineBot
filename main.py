@@ -34,6 +34,7 @@ def scrapePage(locationData, remote):
 
     driver.get(locationData[1])
     for x in range(50):
+        print(x)
         if check_exists_by_css_selector("body > app-root > div > app-page-its-login > div > div > div:nth-child(2) > app-its-login-user > div > div > app-corona-vaccination > div:nth-child(2) > div > div > label:nth-child(2) > span > small" ,driver):
             print("Side loading took "+x/2+" seconds")
             break;
