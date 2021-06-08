@@ -174,4 +174,4 @@ while(True):
                 sendMessage(location)
         driver.quit()
         # closeDriver(location)
-        time.sleep(30)
+        time.sleep(60)
