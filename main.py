@@ -34,7 +34,6 @@ def scrapePage(locationData, remote):
 
     driver.get(locationData[1])
     for x in range(50):
-        print(x)
         if check_exists_by_css_selector("body > app-root > div > app-page-its-login > div > div > div:nth-child(2) > app-its-login-user > div > div > app-corona-vaccination > div:nth-child(2) > div > div > label:nth-child(2) > span > small" ,driver):
             print("Side loading took "+str(x/2)+" seconds")
             break;
@@ -94,10 +93,10 @@ def scrapePage(locationData, remote):
                     elif type == "L921":
                         types_str = types_str + "Moderna"
                     elif type == "L922":
-                        types_str = types_str + "AstraZeneca"
+                        types_str = types_str + "AstraZeneca (60+)"
                         silent = True
                     elif type == "L923":
-                        types_str = types_str + "Johnson & Johnson"
+                        types_str = types_str + "Johnson & Johnson (60+)"
                         silent = True
 
                 pushData = {"chat_id": locationData[3], "text": "Es gibt Impftermine in "+locationData[0]+" für folgende Stoffe: " + types_str+". Buchbar unter folgendem Link: "+locationData[1], "disable_notification":silent}
