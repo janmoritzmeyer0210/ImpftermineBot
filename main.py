@@ -2,6 +2,8 @@ import os, time, json, requests, selenium
 
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from selenium.common.exceptions import NoSuchElementException
+
 
 # Send Test Message to show that the application is running
 pushData = {"chat_id":"-1001499214177","text":"Die APP wurde neu gestartet"}
@@ -9,6 +11,15 @@ request = requests.post("https://api.telegram.org/bot"+os.environ['telegram']+"/
 
 # Locations Array is defined in the following structure: Array[Array[Name, Vaccination Center Page, REST Api for appointment check]]
 locations = json.loads(os.environ['locations'])
+
+def check_exists_by_css_selector(selector, webdriver):
+    try:
+        webdriver.find_element_by_xpath(selector)
+    except NoSuchElementException:
+        return False
+    return True
+
+
 def scrapePage(locationData, remote):
     # Click through the impftermineservice page to act like a human lol
     PROXY = os.environ['proxy']
@@ -22,6 +33,12 @@ def scrapePage(locationData, remote):
 
 
     driver.get(locationData[1])
+    for x in range(50):
+        if check_exists_by_css_selector("body > app-root > div > app-page-its-login > div > div > div:nth-child(2) > app-its-login-user > div > div > app-corona-vaccination > div:nth-child(2) > div > div > label:nth-child(2) > span > small" ,driver):
+            break;
+        if check_exists_by_css_selector("div.clock" ,driver):
+            break;
+        time.sleep(0.5)
     try:
         driver.find_element_by_css_selector(
             "body > app-root > div > app-page-its-login > div > div > div:nth-child(2) > app-its-login-user > div > div > app-corona-vaccination > div:nth-child(2) > div > div > label:nth-child(2) > span > small").click()
