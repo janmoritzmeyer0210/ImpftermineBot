@@ -22,15 +22,13 @@ def scrapePage(locationData, remote):
 
 
     driver.get(locationData[1])
-    time.sleep(3)
-    print(driver.page_source)
     try:
         driver.find_element_by_css_selector(
             "body > app-root > div > app-page-its-login > div > div > div:nth-child(2) > app-its-login-user > div > div > app-corona-vaccination > div:nth-child(2) > div > div > label:nth-child(2) > span > small").click()
-    except:
+    except Exception as e:
+        print('Failed clicking button: '+str(e))
         try:
             for x in range(locationData[4]):
-                print("Waiting room in "+locationData[0]+"...")
                 driver.find_element_by_css_selector("div.clock")
                 pushData = {"chat_id": "-1001499214177", "text": "Waiting room in "+locationData[0]+"..."}
                 requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
