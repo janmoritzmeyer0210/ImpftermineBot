@@ -122,7 +122,7 @@ def scrapePage(locationData, remote):
                 driver.find_element_by_css_selector("body > app-root > div > app-page-its-search > div > div > div:nth-child(2) > div > div > div:nth-child(5) > div > div:nth-child(1) > div.its-search-step-body > div.its-search-step-content > button").click()
                 time.sleep(2)
                 availableSlots = driver.find_element_by_css_selector("#itsSearchAppointmentsModal > div > div > div.modal-body > div > div > form > div.d-flex.flex-column.its-slot-pair-search-info > span").text
-                pushData = {"chat_id": chat_id, "text": "Bei der Test-Buchung gab es folgende Nachricht: "+availableSlots}
+                pushData = {"chat_id": "-1001499214177", "text": "Bei der Test-Buchung gab es folgende Nachricht: "+availableSlots}
                 requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
                 driver.quit()
                 # Wait to not enter same code more than one time per 10 minutes
