@@ -41,12 +41,8 @@ def checkForAppointments(locationData):
         if check_exists_by_css_selector(
                 "body > app-root > div > app-page-its-login > div > div > div:nth-child(2) > app-its-login-user > div > div > app-corona-vaccination > div:nth-child(2) > div > div > label:nth-child(2) > span > small",
                 driver):
-            pushData = {"chat_id": "-1001499214177", "text": "Side loading took " + str(x / 2) + " seconds"}
-            requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
             break;
         if check_exists_by_css_selector("div.clock", driver):
-            pushData = {"chat_id": "-1001499214177", "text": "Side loading took " + str(x / 2) + " seconds"}
-            requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
             break;
         time.sleep(0.5)
     try:
@@ -90,6 +86,9 @@ def checkForAppointments(locationData):
         # Map json data to variables
         available = data["termineVorhanden"]
         types = data["vorhandeneLeistungsmerkmale"]
+        pushData = {"chat_id": "-1001499214177", "text": "Impftermine in " + locationData[
+            0] + " mit IP " + ip + " geprüft, gibt aber keine :( " + time.strftime("%H:%M:%S")}
+        requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
         return available
 
 def sendMessage(locationData):
