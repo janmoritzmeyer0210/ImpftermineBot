@@ -99,7 +99,7 @@ def scrapePage(locationData, remote):
                         types_str = types_str + "Johnson & Johnson"
                         silent = True
 
-                pushData = {"chat_id": locationData[3], "text": "Es gibt Impftermine in "+locationData[0]+" für folgende Stoffe: " + types_str+". Buchbar unter folgendem Link: "+locationData[1], "silent":silent}
+                pushData = {"chat_id": locationData[3], "text": "Es gibt Impftermine in "+locationData[0]+" für folgende Stoffe: " + types_str+". Buchbar unter folgendem Link: "+locationData[1], "disable_notification":silent}
                 requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
                 driver.get(locationData[1])
                 time.sleep(1)
