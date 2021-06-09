@@ -44,6 +44,8 @@ def checkForAppointments(locationData):
     res = scraper.get(locationData[2], proxies=proxies)
     jsonData = res.text
 
+    print(jsonData)
+
     # If the response is {} we probably got detected and our IP is blocked. Therefore we wait 10 minutes until we continue
     if (jsonData == "{}"):
         pushData = {"chat_id": "-1001499214177", "text": "Der Bot wurde in " + locationData[0] + " mit der IP " + ip + " gesperrt oder der Warteraum wurde abgebrochen :("}
@@ -174,6 +176,7 @@ def generateCookie(locationData):
 def threadForLocation(locationData):
     pushData = {"chat_id": "-1001499214177", "text": "Ein Thread für "+locationData[0]+" wurde gestartet"}
     requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
+    initDriver()
     while (True):
         if checkForAppointments(locationData):
             consistent = True
