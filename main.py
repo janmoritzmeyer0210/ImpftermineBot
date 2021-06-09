@@ -172,11 +172,16 @@ def generateCookie(locationData):
     requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
     driver.quit()
 
+def getIP():
+    ipres = scraper.get("http://api.ipify.org/", proxies=proxies)
+    ip = ipres.text
+    print(ip)
+
 
 def threadForLocation(locationData):
     pushData = {"chat_id": "-1001499214177", "text": "Ein Thread für "+locationData[0]+" wurde gestartet"}
     requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
-    initDriver()
+    getIP()
     while (True):
         if checkForAppointments(locationData):
             consistent = True
