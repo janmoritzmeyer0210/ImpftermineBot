@@ -1,4 +1,4 @@
-import os, time, json, requests, selenium, threading
+import os, time, json, requests, selenium, threading, cloudscraper
 
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
