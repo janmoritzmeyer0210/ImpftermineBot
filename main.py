@@ -166,7 +166,12 @@ def generateCookie(locationData):
             driver.find_element_by_css_selector(
                 "body > app-root > div > app-page-its-login > div > div > div:nth-child(2) > app-its-login-user > div > div > app-corona-vaccination > div:nth-child(2) > div > div > label:nth-child(2) > span > small").click()
     time.sleep(5)
-    scraper.cookies.update({"bm_sz": driver.get_cookie("bm_sz").get("value"), "bm_mi": driver.get_cookie("bm_mi").get("value"), "bm_sv": driver.get_cookie("bm_sv").get("value"), "ak_bmsc": driver.get_cookie("bm_sv").get("value"), "_abck": driver.get_cookie("_abck").get("value")})
+    driver.get_cookie("bm_sz").get("value")
+    driver.get_cookie("bm_sv").get("value")
+    driver.get_cookie("ak_bmsc").get("value")
+    driver.get_cookie("_abck").get("value")
+    driver.get_cookie("akavpau_User_allowed").get("value")
+    scraper.cookies.update({"bm_sv": driver.get_cookie("bm_sv").get("value"), "ak_bmsc": driver.get_cookie("ak_bmsc").get("value"), "_abck": driver.get_cookie("_abck").get("value"), "_abck": driver.get_cookie("_abck").get("value"), "akavpau_User_allowed": driver.get_cookie("akavpau_User_allowed").get("value"), "bm_sz": driver.get_cookie("bm_sz").get("value")})
     pushData = {"chat_id": "-1001499214177", "text": "Es wurden Cookies für " + locationData[0] + " generiert:" + cookie}
     requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
     driver.quit()
