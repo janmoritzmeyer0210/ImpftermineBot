@@ -186,9 +186,7 @@ def threadForLocation(locationData):
 
 # Wait until the selenium and tor containers are initialized
 time.sleep(25)
-while(True):
-    for location in locations:
-        x = threading.Thread(target=threadForLocation, args=(location,))
-        x.start()
-        time.sleep(60)
-        time.sleep(60)
+for location in locations:
+    x = threading.Thread(target=threadForLocation, args=(location,))
+    x.start()
+    time.sleep(60)
