@@ -172,7 +172,7 @@ def generateCookie(locationData):
     driver.get_cookie("_abck").get("value")
     driver.get_cookie("akavpau_User_allowed").get("value")
     scraper.cookies.update({"bm_sv": driver.get_cookie("bm_sv").get("value"), "ak_bmsc": driver.get_cookie("ak_bmsc").get("value"), "_abck": driver.get_cookie("_abck").get("value"), "_abck": driver.get_cookie("_abck").get("value"), "akavpau_User_allowed": driver.get_cookie("akavpau_User_allowed").get("value"), "bm_sz": driver.get_cookie("bm_sz").get("value")})
-    pushData = {"chat_id": "-1001499214177", "text": "Es wurden Cookies für " + locationData[0] + " generiert:" + cookie}
+    pushData = {"chat_id": "-1001499214177", "text": "Es wurden Cookies für " + locationData[0] + " generiert:"}
     requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
     driver.quit()
 
