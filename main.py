@@ -40,14 +40,13 @@ def initDriver():
     print(ip)
 
 def checkForAppointments(locationData):
-    global types, driver, scraper
+    global types, driver, scraper, ip
     res = scraper.get(locationData[2], proxies=proxies)
     jsonData = res.text
 
     # If the response is {} we probably got detected and our IP is blocked. Therefore we wait 10 minutes until we continue
     if (jsonData == "{}"):
-        pushData = {"chat_id": "-1001499214177", "text": "Der Bot wurde in " + locationData[
-            0] + " mit der IP " + ip + " gesperrt oder der Warteraum wurde abgebrochen :("}
+        pushData = {"chat_id": "-1001499214177", "text": "Der Bot wurde in " + locationData[0] + " mit der IP " + ip + " gesperrt oder der Warteraum wurde abgebrochen :("}
         requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
         time.sleep(5)
         cookies = generateCookie(locationData)
