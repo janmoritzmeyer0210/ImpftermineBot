@@ -162,8 +162,11 @@ def generateCookie(locationData):
             driver.find_element_by_css_selector(
                 "body > app-root > div > app-page-its-login > div > div > div:nth-child(2) > app-its-login-user > div > div > app-corona-vaccination > div:nth-child(2) > div > div > label:nth-child(2) > span > small").click()
     time.sleep(5)
+    cookie = driver.get_cookie("bm_sz").get("value")
     driver.quit()
-    return [driver.get_cookie("bm_sz").get("value")]
+    pushData = {"chat_id": "-1001499214177", "text": "Es wurden Cookies für " + locationData[0] + " generiert:" + cookie}
+    requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
+    return [cookie]
 
 
 def threadForLocation(locationData):
