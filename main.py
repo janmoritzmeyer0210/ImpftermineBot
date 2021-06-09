@@ -39,9 +39,8 @@ def initDriver():
     ip = ipres.text
     print(ip)
 
-def checkForAppointments(locationData, cookie):
+def checkForAppointments(locationData):
     global types, driver, scraper
-    scraper.cookies.update({"bm_sz": cookie[0]})
     res = scraper.get(locationData[2], proxies=proxies)
     jsonData = res.text
 
@@ -167,26 +166,25 @@ def generateCookie(locationData):
                 "body > app-root > div > app-page-its-login > div > div > div:nth-child(2) > app-its-login-user > div > div > app-corona-vaccination > div:nth-child(2) > div > div > label:nth-child(2) > span > small").click()
     time.sleep(5)
     cookie = driver.get_cookie("bm_sz").get("value")
-    driver.quit()
+    scraper.cookies.update({"bm_sz": cookie})
     pushData = {"chat_id": "-1001499214177", "text": "Es wurden Cookies für " + locationData[0] + " generiert:" + cookie}
     requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
-    return [cookie]
+    driver.quit()
 
 
 def threadForLocation(locationData):
     pushData = {"chat_id": "-1001499214177", "text": "Ein Thread für "+locationData[0]+" wurde gestartet"}
     requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
-    cookies = generateCookie(locationData)
     while (True):
-        if checkForAppointments(locationData, cookies):
+        if checkForAppointments(locationData):
             consistent = True
             for x in range(location[7]):
                 time.sleep(10)
-                if not checkForAppointments(location, cookies):
+                if not checkForAppointments(location):
                     consistent = False
             if consistent:
                 sendMessage(location)
-        time.sleep(10)
+        time.sleep(30)
 
 # Wait until the selenium and tor containers are initialized
 time.sleep(25)
