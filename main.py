@@ -42,7 +42,7 @@ def checkForAppointments(locationData, cookie):
     global types, driver, scraper
     scraper.cookies.update({"bm_sz": cookie[0]})
     res = scraper.get(locationData[2])
-    jsonData = str(res.content);
+    jsonData = res.text
 
     # If the response is {} we probably got detected and our IP is blocked. Therefore we wait 10 minutes until we continue
     if (jsonData == "{}"):
