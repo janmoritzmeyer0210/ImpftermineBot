@@ -35,9 +35,9 @@ def initDriver():
     chrome_options.add_argument('--proxy-server=%s' % PROXY)
     driver = webdriver.Remote(os.environ['selenium'], DesiredCapabilities.CHROME, None, None, False, None, chrome_options)
 
-    driver.get("http://api.ipify.org/")
-    ip = driver.find_element_by_css_selector("pre")
-    ip = ip.text
+    ipres = scraper.get("http://api.ipify.org/", proxies=proxies)
+    ip = ipres.text
+    print(ip)
 
 def checkForAppointments(locationData, cookie):
     global types, driver, scraper
@@ -194,3 +194,6 @@ for location in locations:
     x = threading.Thread(target=threadForLocation, args=(location,))
     x.start()
     time.sleep(60)
+
+while True:
+    time.sleep(100)
