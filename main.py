@@ -17,6 +17,9 @@ ip = None
 types = None
 cookies = None
 
+scraper = cloudscraper.create_scraper()
+
+
 def check_exists_by_css_selector(selector, webdriver):
     try:
         webdriver.find_element_by_css_selector(selector)
