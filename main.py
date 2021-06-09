@@ -16,6 +16,7 @@ driver = None
 ip = None
 types = None
 cookies = None
+proxies = {"http": os.environ['proxy']}
 
 scraper = cloudscraper.create_scraper()
 
@@ -41,7 +42,7 @@ def initDriver():
 def checkForAppointments(locationData, cookie):
     global types, driver, scraper
     scraper.cookies.update({"bm_sz": cookie[0]})
-    res = scraper.get(locationData[2])
+    res = scraper.get(locationData[2], proxies=proxies)
     jsonData = res.text
 
     # If the response is {} we probably got detected and our IP is blocked. Therefore we wait 10 minutes until we continue
