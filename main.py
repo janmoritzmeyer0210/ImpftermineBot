@@ -1,4 +1,4 @@
-import os, time, json, requests, selenium
+import os, time, json, requests, selenium, threading
 
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
@@ -15,6 +15,7 @@ locations = json.loads(os.environ['locations'])
 driver = None
 ip = None
 types = None
+cookies = None
 
 def check_exists_by_css_selector(selector, webdriver):
     try:
@@ -34,43 +35,11 @@ def initDriver():
     ip = driver.find_element_by_css_selector("pre")
     ip = ip.text
 
-def checkForAppointments(locationData):
-    global types, driver
-    driver.get(locationData[1])
-    for x in range(50):
-        if check_exists_by_css_selector(
-                "body > app-root > div > app-page-its-login > div > div > div:nth-child(2) > app-its-login-user > div > div > app-corona-vaccination > div:nth-child(2) > div > div > label:nth-child(2) > span > small",
-                driver):
-            break;
-        if check_exists_by_css_selector("div.clock", driver):
-            break;
-        time.sleep(0.5)
-    try:
-        driver.find_element_by_css_selector(
-            "body > app-root > div > app-page-its-login > div > div > div:nth-child(2) > app-its-login-user > div > div > app-corona-vaccination > div:nth-child(2) > div > div > label:nth-child(2) > span > small").click()
-    except Exception as e:
-        print('Failed clicking button: ' + str(e))
-        try:
-            for x in range(locationData[5]):
-                driver.find_element_by_css_selector("div.clock")
-                pushData = {"chat_id": "-1001499214177", "text": "Waiting room in " + locationData[0] + "..."}
-                requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
-                time.sleep(10)
-        except:
-            print("We are through")
-            time.sleep(2)
-            driver.find_element_by_css_selector(
-                "body > app-root > div > app-page-its-login > div > div > div:nth-child(2) > app-its-login-user > div > div > app-corona-vaccination > div:nth-child(2) > div > div > label:nth-child(2) > span > small").click()
-    time.sleep(5)
-    driver.get(locationData[2])
-    # Get Json Data which shows available appointments
-    try:
-        jsonData = driver.find_element_by_css_selector("pre")
-        jsonData = jsonData.text
-    except:
-        pushData = {"chat_id": "-1001499214177", "text": "Es gab einen Bug, Webdata: " + driver.page_source}
-        requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
-        jsonData = "{}"
+def checkForAppointments(locationData, cookie):
+    global types, driver, scraper
+    scraper.cookies.update({"bm_sz": cookie[0]})
+    res = scraper.get(locationData[2])
+    jsonData = str(res.content);
 
     # If the response is {} we probably got detected and our IP is blocked. Therefore we wait 10 minutes until we continue
     if (jsonData == "{}"):
@@ -78,6 +47,7 @@ def checkForAppointments(locationData):
             0] + " mit der IP " + ip + " gesperrt oder der Warteraum wurde abgebrochen :("}
         requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
         time.sleep(5)
+        cookies = generateCookie(locationData)
         return False
     else:
         # Decode json data
@@ -113,6 +83,8 @@ def sendMessage(locationData):
                 silent = True
                 chat_id = locationData[4]
 
+
+        initDriver()
         pushData = {"chat_id": chat_id, "text": "Es gibt Impftermine in " + locationData[
             0] + " für folgende Stoffe: " + types_str + ". Buchbar unter folgendem Link: " + locationData[1],
                     "disable_notification": silent}
@@ -151,6 +123,7 @@ def sendMessage(locationData):
         print('Failed clicking button: ' + str(e))
         pushData = {"chat_id": "-1001499214177", "text": "Request was buggy " + driver.page_source}
         requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
+        driver.quit()
 
 def closeDriver(locationData):
     global driver
@@ -160,19 +133,59 @@ def closeDriver(locationData):
     driver.quit()
 
 
+def generateCookie(locationData):
+    global driver
+    initDriver()
+    driver.get(locationData[1])
+    for x in range(50):
+        if check_exists_by_css_selector(
+                "body > app-root > div > app-page-its-login > div > div > div:nth-child(2) > app-its-login-user > div > div > app-corona-vaccination > div:nth-child(2) > div > div > label:nth-child(2) > span > small",
+                driver):
+            break;
+        if check_exists_by_css_selector("div.clock", driver):
+            break;
+        time.sleep(0.5)
+    try:
+        driver.find_element_by_css_selector(
+            "body > app-root > div > app-page-its-login > div > div > div:nth-child(2) > app-its-login-user > div > div > app-corona-vaccination > div:nth-child(2) > div > div > label:nth-child(2) > span > small").click()
+    except Exception as e:
+        print('Failed clicking button: ' + str(e))
+        try:
+            for x in range(locationData[5]):
+                driver.find_element_by_css_selector("div.clock")
+                pushData = {"chat_id": "-1001499214177", "text": "Waiting room in " + locationData[0] + "..."}
+                requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
+                time.sleep(10)
+        except:
+            print("We are through")
+            time.sleep(2)
+            driver.find_element_by_css_selector(
+                "body > app-root > div > app-page-its-login > div > div > div:nth-child(2) > app-its-login-user > div > div > app-corona-vaccination > div:nth-child(2) > div > div > label:nth-child(2) > span > small").click()
+    time.sleep(5)
+    driver.quit()
+    return [driver.get_cookie("bm_sz").get("value")]
+
+
+def threadForLocation(locationData):
+    pushData = {"chat_id": "-1001499214177", "text": "Ein Thread für "+locationData[0]+" wurde gestartet"}
+    requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
+    cookies = generateCookie(locationData)
+    while (True):
+        if checkForAppointments(locationData, cookies):
+            consistent = True
+            for x in range(location[7]):
+                time.sleep(10)
+                if not checkForAppointments(location, cookies):
+                    consistent = False
+            if consistent:
+                sendMessage(location)
+        time.sleep(10)
+
 # Wait until the selenium and tor containers are initialized
 time.sleep(25)
 while(True):
     for location in locations:
-        initDriver()
-        if checkForAppointments(location):
-            consistent = True
-            for x in range(location[7]):
-                time.sleep(10)
-                if not checkForAppointments(location):
-                    consistent = False
-            if consistent:
-                sendMessage(location)
-        driver.quit()
-        # closeDriver(location)
+        x = threading.Thread(target=threadForLocation, args=(location,))
+        x.start()
+        time.sleep(60)
         time.sleep(60)
