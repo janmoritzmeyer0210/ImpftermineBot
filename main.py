@@ -3,7 +3,7 @@ import os, time, json, requests, selenium, threading, cloudscraper
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.common.exceptions import NoSuchElementException
-
+from base64 import b64encode
 
 # Send Test Message to show that the application is running
 pushData = {"chat_id":"-1001499214177","text":"Die APP wurde neu gestartet"}
@@ -138,8 +138,7 @@ def closeDriver(locationData):
 
 
 def generateCookie(locationData):
-    global driver
-    initDriver()
+    global driver, scraper
     driver.get(locationData[1])
     for x in range(50):
         if check_exists_by_css_selector(
@@ -158,22 +157,39 @@ def generateCookie(locationData):
             for x in range(locationData[5]):
                 driver.find_element_by_css_selector("div.clock")
                 pushData = {"chat_id": "-1001499214177", "text": "Waiting room in " + locationData[0] + "..."}
-                requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
+                requests.post(
+                    "https://api.telegram.org/bot" + "1759364617:AAH3WZHNGQlSOvik7DNg7GBLcT1YlNk0B9U" + "/sendMessage",
+                    pushData)
                 time.sleep(10)
         except:
             print("We are through")
             time.sleep(2)
             driver.find_element_by_css_selector(
                 "body > app-root > div > app-page-its-login > div > div > div:nth-child(2) > app-its-login-user > div > div > app-corona-vaccination > div:nth-child(2) > div > div > label:nth-child(2) > span > small").click()
+    time.sleep(1)
+    driver.find_element_by_css_selector(
+        "body > app-root > div > app-page-its-login > div > div > div:nth-child(2) > app-its-login-user > div > div > app-corona-vaccination > div:nth-child(2) > div > div > label:nth-child(1) > span").click()
+    time.sleep(1)
+    code = locationData[6]
+    code = code.split("-")
+    driver.find_element_by_css_selector(
+        "body > app-root > div > app-page-its-login > div > div > div:nth-child(2) > app-its-login-user > div > div > app-corona-vaccination > div:nth-child(3) > div > div > div > div.ets-login-form-section.in > app-corona-vaccination-yes > form > div:nth-child(1) > label > app-ets-input-code > div > div:nth-child(1) > label > input").send_keys(
+        code[0])
+    driver.find_element_by_css_selector(
+        "body > app-root > div > app-page-its-login > div > div > div:nth-child(2) > app-its-login-user > div > div > app-corona-vaccination > div:nth-child(3) > div > div > div > div.ets-login-form-section.in > app-corona-vaccination-yes > form > div:nth-child(1) > label > app-ets-input-code > div > div:nth-child(3) > label > input").send_keys(
+        code[1])
+    driver.find_element_by_css_selector(
+        "body > app-root > div > app-page-its-login > div > div > div:nth-child(2) > app-its-login-user > div > div > app-corona-vaccination > div:nth-child(3) > div > div > div > div.ets-login-form-section.in > app-corona-vaccination-yes > form > div:nth-child(1) > label > app-ets-input-code > div > div:nth-child(5) > label > input").send_keys(
+        code[2])
+    driver.find_element_by_css_selector(
+        "body > app-root > div > app-page-its-login > div > div > div:nth-child(2) > app-its-login-user > div > div > app-corona-vaccination > div:nth-child(3) > div > div > div > div.ets-login-form-section.in > app-corona-vaccination-yes > form > div:nth-child(2) > button").click()
+    time.sleep(2)
     time.sleep(5)
-    driver.get_cookie("bm_sz").get("value")
-    driver.get_cookie("bm_sv").get("value")
-    driver.get_cookie("ak_bmsc").get("value")
-    driver.get_cookie("_abck").get("value")
-    driver.get_cookie("akavpau_User_allowed").get("value")
-    scraper.cookies.update({"bm_sv": driver.get_cookie("bm_sv").get("value"), "ak_bmsc": driver.get_cookie("ak_bmsc").get("value"), "_abck": driver.get_cookie("_abck").get("value"), "_abck": driver.get_cookie("_abck").get("value"), "bm_sz": driver.get_cookie("bm_sz").get("value")})
+    scraper.cookies.clear()
+    scraper.cookies.update({c['name']: c['value'] for c in driver.get_cookies()})
     pushData = {"chat_id": "-1001499214177", "text": "Es wurden Cookies für " + locationData[0] + " generiert"}
-    requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
+    requests.post("https://api.telegram.org/bot" + "1759364617:AAH3WZHNGQlSOvik7DNg7GBLcT1YlNk0B9U" + "/sendMessage",
+                  pushData)
     driver.quit()
 
 def getIP():
@@ -185,6 +201,13 @@ def getIP():
 
 
 def threadForLocation(locationData):
+    global scraper
+    authorization = b64encode(bytes(f":{locationData[6]}", encoding='utf-8')).decode("utf-8")
+    scraper = cloudscraper.create_scraper()
+    scraper.headers.update({
+        'Authorization': f'Basic {authorization}',
+        'User-Agent': 'Mozilla/5.0',
+    })
     pushData = {"chat_id": "-1001499214177", "text": "Ein Thread für "+locationData[0]+" wurde gestartet"}
     requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage", pushData)
     getIP()
@@ -205,7 +228,7 @@ time.sleep(25)
 for location in locations:
     x = threading.Thread(target=threadForLocation, args=(location,))
     x.start()
-    time.sleep(60)
+    time.sleep(60000)
 
 while True:
     time.sleep(100)
