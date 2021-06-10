@@ -139,6 +139,7 @@ def closeDriver(locationData):
 
 def generateCookie(locationData):
     global driver, scraper
+    initDriver()
     driver.get(locationData[1])
     for x in range(50):
         if check_exists_by_css_selector(
