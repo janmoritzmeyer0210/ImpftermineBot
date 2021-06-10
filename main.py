@@ -158,7 +158,7 @@ def generateCookie(locationData):
                 driver.find_element_by_css_selector("div.clock")
                 pushData = {"chat_id": "-1001499214177", "text": "Waiting room in " + locationData[0] + "..."}
                 requests.post(
-                    "https://api.telegram.org/bot" + "1759364617:AAH3WZHNGQlSOvik7DNg7GBLcT1YlNk0B9U" + "/sendMessage",
+                    "https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage",
                     pushData)
                 time.sleep(10)
         except:
@@ -188,7 +188,7 @@ def generateCookie(locationData):
     scraper.cookies.clear()
     scraper.cookies.update({c['name']: c['value'] for c in driver.get_cookies()})
     pushData = {"chat_id": "-1001499214177", "text": "Es wurden Cookies für " + locationData[0] + " generiert"}
-    requests.post("https://api.telegram.org/bot" + "1759364617:AAH3WZHNGQlSOvik7DNg7GBLcT1YlNk0B9U" + "/sendMessage",
+    requests.post("https://api.telegram.org/bot" + os.environ['telegram'] + "/sendMessage",
                   pushData)
     driver.quit()
 
